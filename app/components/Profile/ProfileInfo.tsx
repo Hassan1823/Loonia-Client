@@ -5,8 +5,12 @@ import Image from "next/image";
 import React, { FC, useEffect, useState } from "react";
 import { AiOutlineCamera } from "react-icons/ai";
 import avatarIcon from "../../../public/dp.jpg";
-import { useUpdateAvatarMutation } from "@/redux/features/user/userApi";
+import {
+  useEditProfileMutation,
+  useUpdateAvatarMutation,
+} from "@/redux/features/user/userApi";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import toast from "react-hot-toast";
 
 type Props = {
   avatar: string | null;
@@ -17,6 +21,8 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
 
   const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
+  const [editProfile, { isSuccess: success, error: updateError }] =
+    useEditProfileMutation();
   const [loadUser, setLoadUser] = useState(false);
   const {} = useLoadUserQuery(undefined, { skip: loadUser ? false : true });
 
@@ -34,16 +40,25 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || success) {
       setLoadUser(true);
     }
-    if (error) {
+    if (error || updateError) {
       console.log(error);
     }
-  }, [isSuccess, error]);
+
+    if (success) {
+      toast.success("Profile Updated Successfully");
+    }
+  }, [isSuccess, error, success, updateError]);
 
   const handleSubmit = async (e: any) => {
-    console.log("submit");
+    e.preventDefault();
+    if (name !== "") {
+      await editProfile({
+        name: name,
+      });
+    }
   };
 
   return (
@@ -51,6 +66,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
       <div className="w-full flex justify-center">
         <div className="relative">
           <Image
+            key={user.avatar || avatar} // Add a unique key when the image source changes
             src={user.avatar || avatar ? user.avatar.url || avatar : avatarIcon}
             alt="user dp"
             width={120}
@@ -74,7 +90,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
       </div>
       <br />
       <br />
-      <div className="w-full pl-6 800px:pl-10">
+      <div className="w-[100%] pl-6 800px:pl-10">
         <form onSubmit={handleSubmit}>
           <div className="800px:w-[50%] m-auto block pb-4">
             <div className="w-[100%]">

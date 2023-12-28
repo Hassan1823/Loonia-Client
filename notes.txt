@@ -2,3 +2,5 @@ npm i react-icons
 npm install @mui/material @emotion/react @emotion/styled
 npm i react-hot-toast react-redux @reduxjs/toolkit formik yup
 npm i next-auth
+
+npm i react-pro-sidebar@^0.7.1

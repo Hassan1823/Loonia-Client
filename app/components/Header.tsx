@@ -56,7 +56,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
         toast.success("🚀 Login Successfully");
       }
     }
-  }, [user, data, isSuccess, socialAuth]);
+    // if (data === null) {
+    //   setLogout(true);
+    // }
+  }, [user, data]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -75,8 +78,6 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
       }
     }
   };
-
-  console.table(user);
 
   return (
     <div className="w-full relative">
@@ -120,6 +121,9 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
                     className="w-[30px] h-[30px] rounded-full cursor-pointer"
                     width={30}
                     height={30}
+                    style={{
+                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
+                    }}
                   />
                 </Link>
               ) : (
