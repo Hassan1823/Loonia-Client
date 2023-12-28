@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import NavItems from "../utils/NavItems";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
 import { IoIosCart } from "react-icons/io";
@@ -10,6 +10,15 @@ import CustomModal from "../utils/CustomModal";
 import Login from "./Auth/Login";
 import SignUp from "./Auth/SignUp";
 import Verification from "./Auth/Verification";
+import { useSelector } from "react-redux";
+import Image from "next/image";
+import avatar from "../../public/dp.jpg";
+import { useSession } from "next-auth/react";
+import {
+  useLogOutQuery,
+  useSocialAuthMutation,
+} from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
 
 type Props = {
   open: boolean;
@@ -22,6 +31,32 @@ type Props = {
 const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
+  const { user } = useSelector((state: any) => state.auth);
+  const { data } = useSession();
+
+  const [logout, setLogout] = useState(false);
+  const {} = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
+
+  const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
+
+  useEffect(() => {
+    if (!user) {
+      if (data) {
+        socialAuth({
+          email: data?.user?.email,
+          name: data?.user?.name,
+          avatar: data?.user?.image,
+        });
+      }
+    }
+    if (data === null) {
+      if (isSuccess) {
+        toast.success("🚀 Login Successfully");
+      }
+    }
+  }, [user, data, isSuccess, socialAuth]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -40,6 +75,8 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
       }
     }
   };
+
+  console.table(user);
 
   return (
     <div className="w-full relative">
@@ -69,17 +106,31 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
                 />
               </div>
               <div className="hidden 800px:flex ">
-                <IoIosCart size={25} className="cursor-pointer text-white" />
+                <Link href={"/cart"}>
+                  <IoIosCart size={25} className="cursor-pointer text-white" />
+                </Link>
               </div>
 
               {/*  for desktop */}
-              <div className="hidden 800px:flex ">
-                <HiOutlineUserCircle
-                  size={25}
-                  className="cursor-pointer text-white"
-                  onClick={() => setOpen(true)}
-                />
-              </div>
+              {user ? (
+                <Link href={"/profile"}>
+                  <Image
+                    src={user.avatar ? user.avatar?.url : avatar}
+                    alt="user profile picture"
+                    className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                    width={30}
+                    height={30}
+                  />
+                </Link>
+              ) : (
+                <div className="flex ">
+                  <HiOutlineUserCircle
+                    size={25}
+                    className="cursor-pointer text-white"
+                    onClick={() => setOpen(true)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -97,12 +148,12 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
                 size={25}
                 className="cursor-pointer ml-5 my-2 text-white "
               />
-              <br />
+              {/* <br />
               <HiOutlineUserCircle
                 size={25}
                 className="cursor-pointer ml-5 my-2 text-white "
                 onClick={() => setOpen(true)}
-              />
+              /> */}
               <br />
               <br />
               <p className="text-[16px] px-2 pl-5 text-white ">

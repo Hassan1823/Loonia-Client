@@ -13,7 +13,7 @@ const Page: FC<Props> = (props) => {
   const [route, setRoute] = useState("Login");
 
   return (
-    <div className="">
+    <div className="w-full min-h-screen h-auto">
       <Heading
         title="Loonia Traders"
         description="This is the car parts place where you can find all parts"
