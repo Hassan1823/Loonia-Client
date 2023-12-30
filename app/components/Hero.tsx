@@ -12,7 +12,7 @@ function Hero() {
   };
 
   return (
-    <div className="grid grid-cols-1 1000px:grid-cols-2 p-12">
+    <div className="grid grid-cols-1 1000px:grid-cols-2 p-12 h-auto">
       <div className="pl-14 ">
         <h2
           className="text-[40px] md:text-[60px] 

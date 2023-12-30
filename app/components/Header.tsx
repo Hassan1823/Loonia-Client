@@ -91,8 +91,8 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
         <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
             <div className="">
-              <Link href={"/"} className="text-[25px] font-[500]">
-                Loonia Traders
+              <Link href={"/"} className="text-[25px] font-[500] hover:shadow-sm">
+                Luna Traders
               </Link>
             </div>
             <div className="flex items-center gap-8">
