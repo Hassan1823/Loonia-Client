@@ -1,33 +1,44 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Loader from "@/app/components/Loader";
-import { useGetProductCardsQuery, useGetSingleProductQuery } from "@/redux/features/products/productApi";
-import React, { useEffect } from "react";
-// import { usePathname } from "next/navigation";
+import { useGetSingleProductQuery } from "@/redux/features/products/productApi";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Props = {};
 
 const Page = ({ params }: any) => {
+  const [itemDesc, setItemDesc] = useState([]);
   const schema = params;
   const id = schema.id;
   //     console.log(id)
   const item = schema.itemDesc.replaceAll("%20", " ").trim();
-  console.log(item);
-  //   const pathname = usePathname();
+  // console.log(item);
+  const pathname = usePathname();
 
-  
-
-  const { isLoading, isSuccess, data } = useGetProductCardsQuery(id);
+  const { isSuccess, isLoading, data } = useGetSingleProductQuery(id);
   useEffect(() => {
     if (isSuccess) {
-      console.log(data.product);
+      data.product.ListOfHrefs.map((list: any, index: number) => {
+        const tag = list.H1Tag.trim();
+        if (tag === item) {
+          console.log(true);
+          setItemDesc(list.cards);
+        } else {
+          console.log(false);
+        }
+      });
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, itemDesc, item]);
+  console.log(itemDesc ? itemDesc : "null");
+  // console.log(data)
 
   return (
     <>
       {/* main container */}
-      <div className="w-full min-h-screen h-auto flex flex-col lg:px-32 md:px-12 px-4 text-center justify-center">
+      <div className="w-full min-h-screen h-auto flex flex-col lg:px-32 md:px-12 px-4 text-center justify-start">
         {/* heading */}
         <h1 className="lg:text-4xl text-2xl font-semibold text-yellow-500 py-6">
           Choose schema for
@@ -37,23 +48,32 @@ const Page = ({ params }: any) => {
         </h1>
         {/* parts cards */}
 
-        <div className="w-full h-auto flex items-center justify-center gap-2 my-6">
-          {isLoading && !isSuccess ? (
-            <>
-              <Loader />
-            </>
+        <div className="w-full h-auto flex items-center justify-center gap-2 my-12">
+          {isLoading ? (
+            <Loader />
           ) : (
             <>
-              {data && (
-                <>
-                  {data.product.ListOfHrefs.map((item: any, index: number) => {
-                    const tag = item.H1Tag.trim();
-                    return <p key={index}>{tag}</p>;
-                    //   if (item === item.H1Tag) {
-                    //   }
-                  })}
-                </>
-              )}
+              <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-2 sm:gap-8 lg:gap-14">
+                {itemDesc.map((item: any, index: number) => {
+                  return (
+                    <Link
+                      key={index}
+                      href={`${pathname}/${item.Alt}`}
+                      passHref
+                      className="sm:w-48 w-auto h-56 sm:p-0 p-1 flex flex-col hover:shadow-xl hover:border hover:duration-300 hover:scale-105 hover:border-opacity-10 rounded-md items-center justify-around text-yellow-500 hover:bg-slate-100 hover:bg-opacity-10"
+                    >
+                      <Image
+                        src={item.ImageLink}
+                        alt={item.Alt}
+                        width={200}
+                        height={200}
+                        className="object-contain rounded-md lg:w-52 md:w-44 w-40 h-40"
+                      />
+                      <span className="lg:text-sm text-xs">{item.Alt}</span>
+                    </Link>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>

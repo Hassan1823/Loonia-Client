@@ -9,18 +9,20 @@ import { Providers } from "./Provider";
 import { SessionProvider } from "next-auth/react";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import Loader from "./components/Loader";
+import { Outfit } from "next/font/google";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-Poppins",
-});
+// const poppins = Poppins({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-Poppins",
+// });
 
-const josefin = Josefin_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-Josefin",
-});
+// const josefin = Josefin_Sans({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-Josefin",
+// });
+const inter = Outfit({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -29,12 +31,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${josefin.variable}`}>
+      <body className={inter.className}>
         <Providers>
           <SessionProvider>
-            <Custom>
-            {children}
-            </Custom>
+            <Custom>{children}</Custom>
             <Toaster position="top-center" reverseOrder={false} />
           </SessionProvider>
         </Providers>
@@ -43,18 +43,7 @@ export default function RootLayout({
   );
 }
 
-
-
-const Custom:React.FC<{children:React.ReactNode}> = ({children})=>{
-  const {isLoading} = useLoadUserQuery({})
-  return (
-    <>
-      {
-        isLoading ? <Loader /> : 
-        <>
-        {children}
-        </>
-      }
-    </>
-  )
-}
+const Custom: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isLoading } = useLoadUserQuery({});
+  return <>{isLoading ? <Loader /> : <>{children}</>}</>;
+};
