@@ -26,8 +26,8 @@ const Page = ({ params }: any) => {
       if (product.length !== 0) {
         data.product.ListOfHrefs.map((list: any, index: number) => {
           const tag = list.H1Tag.trim();
-          console.log(`tag: ${tag}`);
-          console.log(`tag: ${item}`);
+          // console.log(`tag: ${tag}`);
+          // console.log(`tag: ${item}`);
 
           if (tag === item) {
             setItemDesc(list.cards);
@@ -40,7 +40,7 @@ const Page = ({ params }: any) => {
       console.log(data ? product : "no data");
     }
   }, [isSuccess, data, itemDesc, item, product]);
-  console.log(itemDesc.length !== 0 ? itemDesc : "null");
+  // console.log(itemDesc.length !== 0 ? itemDesc : "null");
   // console.log(data)
 
   return (

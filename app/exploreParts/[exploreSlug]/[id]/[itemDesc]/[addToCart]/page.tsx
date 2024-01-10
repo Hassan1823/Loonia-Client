@@ -13,7 +13,7 @@ const Page = ({ params }: any) => {
   const schema = params;
   const id = schema.id;
   //     console.log(id)
-  const item = schema.itemDesc.replaceAll("%20", " ").trim();
+  const item = decodeURIComponent(schema.itemDesc).trim();
   const cartItem = decodeURIComponent(
     schema.addToCart.replaceAll("%20", " ").trim()
   );
