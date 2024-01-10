@@ -5,17 +5,17 @@ import CarsCards from "./CarsCards";
 
 function SearchInput() {
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
-//   const [selectYear, setSelectYear] = useState("");
+    const [selectYear, setSelectYear] = useState("");
 
   // handle manufacturer
-  const handleManufacturerChange = (e:any) => {
+  const handleManufacturerChange = (e: any) => {
     setSelectManufacturer(e.target.value); // Update the selectedManufacturer state with the selected option
   };
 
   // handle years
-//   const handleYearChange = (e:any) => {
-//     setSelectYear(e.target.value); // Update the selectedYears state with the selected option
-//   };
+    const handleYearChange = (e:any) => {
+      setSelectYear(e.target.value); // Update the selectedYears state with the selected option
+    };
 
   return (
     <div className="w-full h-auto">
@@ -64,7 +64,7 @@ function SearchInput() {
                 <option>Suzuki</option>
               </select>
             </div>
-            {/* <div className="flex items-center pl-4">
+            <div className="flex items-center pl-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -111,14 +111,14 @@ function SearchInput() {
                 <option>2001</option>
                 <option>2000-1966</option>
               </select>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
 
       <CarsCards
         selectManufacture={selectManufacture}
-      //   selectYear={selectYear}
+        //   selectYear={selectYear}
       />
     </div>
   );

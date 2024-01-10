@@ -2,7 +2,7 @@
 const nextConfig = {
   // output: "export",
   images: {
-    domains: ["res.cloudinary.com", "static.amayama.com", "www.amayama.com"],
+    domains: ["res.cloudinary.com", "static.amayama.com", "www.amayama.com", "nissan-img.amayama.com"],
   },
 };
 

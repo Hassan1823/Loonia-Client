@@ -39,6 +39,14 @@ export const productApi = apiSlice.injectEndpoints({
         body: { productId, payment_info },
       }),
     }),
+    //~ get api by main type
+    getProductsByMainTypes: builder.query({
+      query: (type) => ({
+        url: "products-by-type",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -48,4 +56,5 @@ export const {
   useGetSingleProductQuery,
   useGetSubCategoriesProductsQuery,
   useGetProductCardsQuery,
+  useGetProductsByMainTypesQuery,
 } = productApi;

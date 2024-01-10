@@ -4,7 +4,7 @@ import { useGetSingleProductQuery } from "@/redux/features/products/productApi";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {};
 
@@ -30,6 +30,7 @@ const partsGroup = [
 const Page = ({ params }: any) => {
   const id = params?.id;
   const { isSuccess, isLoading, data } = useGetSingleProductQuery(id);
+  const [family, setFamily] = useState("");
 
   const pathname: any = usePathname();
 
@@ -40,7 +41,10 @@ const Page = ({ params }: any) => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(data);
+      let pFamily = data.product.Frames.trim();
+      let familyArray = pFamily.split(", ");
+      pFamily = familyArray[0];
+      setFamily(pFamily);
     }
   }, [isSuccess, data]);
 
@@ -77,7 +81,7 @@ const Page = ({ params }: any) => {
                   height={48}
                   className="object-contain rounded-md my-4"
                 />
-                <span className="text-yellow-600">{data.product.Family}</span>
+                <span className="text-yellow-600">{family}</span>
                 <span>{data.product.Years}</span>
                 <span>{data.product.Generation}</span>
               </div>
@@ -86,38 +90,44 @@ const Page = ({ params }: any) => {
                 <h1 className="lg:text-2xl text-base">Choose parts group:</h1>
                 {/* parts */}
                 <div className="w-full h-auto flex flex-wrap lg:justify-start justify-center gap-4 hover:cursor-pointer my-4">
-                  {partsGroup?.map((item: any, index: number) => (
-                    <Link
-                      href={`${pathname}/${data.product.ListOfHrefs[index].H1Tag}`}
-                      passHref
-                      key={index}
-                      className="hover:shadow-xl w-44 h-44 rounded-md text-yellow-500 hover:text-yellow-600 font-medium flex flex-col justify-start text-center items-center gap-2 hover:scale-105 hover:duration-300 hover:bg-slate-100 hover:bg-opacity-10 p-1"
-                    >
-                      <Image
-                            src={`${item.src}`}
-                            alt={item.desc}
-                            width={100}
-                            height={100}
-                            className="object-contain"
-                          />
-                          <span>{item.desc}</span>
-                    </Link>
-                  ))}
+                  {partsGroup?.map((item: any, index: number) => {
+                    let href = data.product.ListOfHrefs[index].H1Tag === undefined ? data.product.ListOfHrefs[index].h1Tag : data.product.ListOfHrefs[index].H1Tag;
+
+                    return (
+                      <Link
+                        href={`${pathname}/${href}`}
+                        passHref
+                        key={index}
+                        className="hover:shadow-xl w-44 h-44 rounded-md text-yellow-500 hover:text-yellow-600 font-medium flex flex-col justify-start text-center items-center gap-2 hover:scale-105 hover:duration-300 hover:bg-slate-100 hover:bg-opacity-10 p-1"
+                      >
+                        <Image
+                          src={`${item.src}`}
+                          alt={item.desc}
+                          width={100}
+                          height={100}
+                          className="object-contain"
+                        />
+                        <span>{item.desc}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
               <div className="flex flex-col gap-8 pb-20 w-full">
-                  <h1 className="lg:text-lg text-sm font-medium text-yellow-500">
-                    Frames
-                  </h1>
-                  <p className="lg:text-sm text-xs leading-5">{data.product.Frames}</p>
+                <h1 className="lg:text-lg text-sm font-medium text-yellow-500">
+                  Frames
+                </h1>
+                <p className="lg:text-sm text-xs leading-5">
+                  {data.product.Frames}
+                </p>
 
-                  <h1 className="lg:text-lg text-sm font-medium text-yellow-500">
-                    {data.product.TypesDiv}
-                  </h1>
-                  <p className="lg:text-sm text-xs leading-5">
-                    {data.product.TextsDiv}
-                  </p>
-                </div>
+                <h1 className="lg:text-lg text-sm font-medium text-yellow-500">
+                  {data.product.TypesDiv}
+                </h1>
+                <p className="lg:text-sm text-xs leading-5">
+                  {data.product.TextsDiv}
+                </p>
+              </div>
               {/* parts group grid ends here  */}
             </div>
           </>

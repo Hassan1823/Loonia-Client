@@ -9,12 +9,12 @@ import { categoriesData } from "../data/data";
 type Props = {};
 
 const Page: React.FC<Props> = (props) => {
-  const [open, setOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(0);
-  const [route, setRoute] = useState("Login");
+  // const [open, setOpen] = useState(false);
+  // const [activeItem, setActiveItem] = useState(0);
+  // const [route, setRoute] = useState("Login");
 
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
-  const [selectYear, setSelectYear] = useState("");
+  // const [selectYear, setSelectYear] = useState("");
 
   const pathname = usePathname();
 

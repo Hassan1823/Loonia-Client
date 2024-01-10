@@ -11,28 +11,36 @@ type Props = {};
 
 const Page = ({ params }: any) => {
   const [itemDesc, setItemDesc] = useState([]);
+  const [product, setProduct] = useState([]);
   const schema = params;
   const id = schema.id;
   //     console.log(id)
-  const item = schema.itemDesc.replaceAll("%20", " ").trim();
+  let item = decodeURIComponent(schema.itemDesc).trim();
   // console.log(item);
   const pathname = usePathname();
 
   const { isSuccess, isLoading, data } = useGetSingleProductQuery(id);
   useEffect(() => {
     if (isSuccess) {
-      data.product.ListOfHrefs.map((list: any, index: number) => {
-        const tag = list.H1Tag.trim();
-        if (tag === item) {
-          console.log(true);
-          setItemDesc(list.cards);
-        } else {
-          console.log(false);
-        }
-      });
+      setProduct(data.product);
+      if (product.length !== 0) {
+        data.product.ListOfHrefs.map((list: any, index: number) => {
+          const tag = list.H1Tag.trim();
+          console.log(`tag: ${tag}`);
+          console.log(`tag: ${item}`);
+
+          if (tag === item) {
+            setItemDesc(list.cards);
+            console.log(true);
+          } else {
+            console.log(false);
+          }
+        });
+      }
+      console.log(data ? product : "no data");
     }
-  }, [isSuccess, data, itemDesc, item]);
-  console.log(itemDesc ? itemDesc : "null");
+  }, [isSuccess, data, itemDesc, item, product]);
+  console.log(itemDesc.length !== 0 ? itemDesc : "null");
   // console.log(data)
 
   return (
