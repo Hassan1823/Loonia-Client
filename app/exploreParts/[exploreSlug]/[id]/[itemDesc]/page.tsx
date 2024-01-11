@@ -25,7 +25,8 @@ const Page = ({ params }: any) => {
       setProduct(data.product);
       if (product.length !== 0) {
         data.product.ListOfHrefs.map((list: any, index: number) => {
-          const tag = list.H1Tag.trim();
+          const tag =
+            list.H1Tag !== undefined ? list.H1Tag.trim() : list.h1Tag.trim();
           // console.log(`tag: ${tag}`);
           // console.log(`tag: ${item}`);
 

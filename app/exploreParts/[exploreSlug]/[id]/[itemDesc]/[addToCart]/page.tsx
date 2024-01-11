@@ -28,7 +28,8 @@ const Page = ({ params }: any) => {
     if (isSuccess) {
       setFrames(data.product.Frames);
       data.product.ListOfHrefs.map((list: any, index: number) => {
-        const tag = list.H1Tag.trim();
+        const tag =
+          list.H1Tag !== undefined ? list.H1Tag.trim() : list.h1Tag.trim();
         if (tag === item) {
           console.log(true);
           const cards = list.cards;

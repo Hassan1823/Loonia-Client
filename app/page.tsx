@@ -1,13 +1,11 @@
 "use client";
 
 import { FC, useState } from "react";
-import Heading from "./utils/Heading";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
-import { useGetAllProductsQuery } from "@/redux/features/products/productApi";
-import Loader from "./components/Loader";
-import Footer from "./components/Footer";
 import SearchInput from "./components/SearchInput";
+import Heading from "./utils/Heading";
 
 interface Props {}
 
@@ -23,7 +21,7 @@ const Page: FC<Props> = (props) => {
   return (
     <div className="w-full min-h-screen h-auto">
       <Heading
-        title="Luna Traders"
+        title="Loonia Traders"
         description="This is the car parts place where you can find all parts"
         keywords="car parts, loonia traders, parts"
       />

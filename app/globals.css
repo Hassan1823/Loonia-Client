@@ -46,6 +46,8 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(

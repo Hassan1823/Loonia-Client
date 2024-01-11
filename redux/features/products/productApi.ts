@@ -47,6 +47,16 @@ export const productApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+
+    // ~ get cars by frame number
+    getProductByFrames: builder.query({
+      query: (frames) => ({
+        url: "products-by-frames",
+        method: "GET",
+        credentials: "include" as const,
+        
+      }),
+    }),
   }),
 });
 
@@ -57,4 +67,5 @@ export const {
   useGetSubCategoriesProductsQuery,
   useGetProductCardsQuery,
   useGetProductsByMainTypesQuery,
+  useGetProductByFramesQuery,
 } = productApi;
