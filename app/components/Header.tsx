@@ -59,7 +59,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
     // if (data === null) {
     //   setLogout(true);
     // }
-  }, [user, data]);
+  }, [user, data, isSuccess, socialAuth]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -91,7 +91,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
         <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
             <div className="">
-              <Link href={"/"} className="text-[25px] font-[500] hover:shadow-sm">
+              <Link
+                href={"/"}
+                className="text-[25px] font-[500] hover:shadow-sm"
+              >
                 Loonia Traders
               </Link>
             </div>
@@ -107,8 +110,34 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
                 />
               </div>
               <div className="hidden 800px:flex ">
-                <Link href={"/cart"}>
-                  <IoIosCart size={25} className="cursor-pointer text-white" />
+                <Link href={"/cart"} passHref>
+                  <div className="dropdown dropdown-end">
+                    <div
+                      tabIndex={0}
+                      role="button"
+                      className="btn btn-ghost btn-circle"
+                    >
+                      <div className="indicator">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                        <span className="badge badge-sm indicator-item">
+                          {user?.products?.length ? user.products.length : 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </Link>
               </div>
 

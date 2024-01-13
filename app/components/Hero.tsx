@@ -13,7 +13,7 @@ function Hero() {
 
   return (
     <div className="grid grid-cols-1 1000px:grid-cols-2 p-12 h-auto">
-      <div className="pl-14 ">
+      <div className="flex flex-col justify-center items-start pl-12">
         <h2
           className="text-[40px] md:text-[60px] 
                 font-bold "
@@ -36,10 +36,10 @@ function Hero() {
         <Image
           src={require("../../public/car.png")}
           alt="hero"
-          width={300}
-          height={400}
+          width={650}
+          height={200}
           priority
-          className="w-full object-fit align-center 800px:pr-14 600px:pr-8 "
+          className="object-fit align-center"
         />
       </div>
     </div>

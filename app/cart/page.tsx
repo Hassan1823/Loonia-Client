@@ -28,6 +28,8 @@ const Page = (props: Props) => {
           route={route}
         />
       </Protected>
+
+      Cart
     </div>
   );
 };

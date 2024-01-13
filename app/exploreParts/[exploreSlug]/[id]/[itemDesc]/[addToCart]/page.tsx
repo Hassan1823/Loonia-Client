@@ -1,9 +1,11 @@
 "use client";
 
 import Loader from "@/app/components/Loader";
+import { useCreateOrderMutation } from "@/redux/features/order/orderApi";
 import { useGetSingleProductQuery } from "@/redux/features/products/productApi";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -46,6 +48,24 @@ const Page = ({ params }: any) => {
       });
     }
   }, [isSuccess, data, itemDesc, item, cartItem]);
+
+  //! create order starts here
+  const [createOrder, { data: orderData, error }] = useCreateOrderMutation();
+
+  useEffect(() => {
+    if (orderData) {
+      console.log(`Order Created Successfully `);
+      toast.success(`Order Created Successfully `);
+    }
+    if (error) {
+      if ("data" in error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [orderData, error]);
+  //! create order ends here
+
   const hrefNamesArray = (itemDesc as any).hrefNames
     ? (itemDesc as any).hrefNames
     : "";
@@ -157,7 +177,18 @@ const Page = ({ params }: any) => {
                         combinedArray[2][index] !== "Not available" &&
                         combinedArray[2][index] !== "Out of stock" &&
                         combinedArray[0][index] !== "-" && (
-                          <button className="bg-yellow-500 text-white rounded-md p-2 hover:scale-110 hover:duration-200 ">
+                          <button
+                            className="bg-yellow-500 text-white rounded-md p-2 hover:scale-110 hover:duration-200 "
+                            onClick={() =>
+                              createOrder({
+                                productId: "65995e852cc1959aa617b346",
+                                payment_info: "65995e852cc1959aa617b3b1",
+                                hrefNumbers: "01125-01731",
+                                hrefNames: "Bolt",
+                                hrefPrices: "2.57",
+                              })
+                            }
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
