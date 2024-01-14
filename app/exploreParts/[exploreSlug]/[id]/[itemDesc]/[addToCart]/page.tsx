@@ -22,7 +22,8 @@ const Page = ({ params }: any) => {
   const exploreSlug = decodeURIComponent(
     schema.exploreSlug.replaceAll("%20", " ").trim()
   );
-  //   console.log(params);
+  // console.log(`Item : `);
+  // console.log(item);
   const pathname = usePathname();
 
   const { isSuccess, isLoading, data } = useGetSingleProductQuery(id);
@@ -80,7 +81,7 @@ const Page = ({ params }: any) => {
   //   console.log(hrefPricesArray);
 
   const combinedArray = [hrefNamesArray, hrefNumbersArray, hrefPricesArray];
-  //   console.log("Combined array is :", combinedArray);
+  console.log("Combined array is :", combinedArray);
 
   // Calculate the 20% values before rendering
   const calculateTwentyPercent = (value: any) => {
@@ -99,6 +100,10 @@ const Page = ({ params }: any) => {
       }).format(sumValue);
     }
   };
+
+  let pName = "";
+  let pPrice = "";
+  let pNumber = "";
 
   return isLoading ? (
     <>
@@ -159,18 +164,30 @@ const Page = ({ params }: any) => {
                   >
                     <th>{index + 1}</th>
 
-                    {combinedArray.map((row, rowIndex) => (
-                      <td key={rowIndex}>
-                        {rowIndex === 2 &&
-                        combinedArray[2][index] !== "Discontinued" &&
-                        combinedArray[2][index] !== "Not available" &&
-                        combinedArray[2][index] !== "Out of stock"
-                          ? // Use the function to calculate and format the values
-                            calculateTwentyPercent(row[index])
-                          : // If the conditions aren't met, display the original value
-                            row[index]}
-                      </td>
-                    ))}
+                    {combinedArray.map((row, rowIndex) => {
+                      if (rowIndex === 0) {
+                        pName = row[rowIndex];
+                      }
+                      if (rowIndex === 1) {
+                        pNumber = row[rowIndex];
+                      }
+                      if (rowIndex === 2) {
+                        pPrice = calculateTwentyPercent(row[index]);
+                      }
+
+                      return (
+                        <td key={rowIndex}>
+                          {rowIndex === 2 &&
+                          combinedArray[2][index] !== "Discontinued" &&
+                          combinedArray[2][index] !== "Not available" &&
+                          combinedArray[2][index] !== "Out of stock"
+                            ? // Use the function to calculate and format the values
+                              calculateTwentyPercent(row[index])
+                            : // If the conditions aren't met, display the original value
+                              row[index]}
+                        </td>
+                      );
+                    })}
 
                     <td>
                       {combinedArray[2][index] !== "Discontinued" &&
@@ -181,11 +198,11 @@ const Page = ({ params }: any) => {
                             className="bg-yellow-500 text-white rounded-md p-2 hover:scale-110 hover:duration-200 "
                             onClick={() =>
                               createOrder({
-                                productId: "65995e852cc1959aa617b346",
-                                payment_info: "65995e852cc1959aa617b3b1",
-                                hrefNumbers: "01125-01731",
-                                hrefNames: "Bolt",
-                                hrefPrices: "2.57",
+                                productId: id,
+                                payment_info: item,
+                                hrefNumbers: pNumber,
+                                hrefNames: pName,
+                                hrefPrices: pPrice,
                               })
                             }
                           >
