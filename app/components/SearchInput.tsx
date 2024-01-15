@@ -1,8 +1,11 @@
 "use client";
 
+import {
+  useGetAllProductsQuery,
+  useGetMainTypeProductsQuery,
+} from "@/redux/features/products/productApi";
 import { useEffect, useState } from "react";
 import CarsCards from "./CarsCards";
-import { useGetAllProductsQuery } from "@/redux/features/products/productApi";
 
 type PartsType = {
   partName: string;
@@ -30,31 +33,60 @@ function SearchInput() {
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
   const [selectSearchType, setSelectSearchType] = useState("Categories");
   const [searchValue, setSearchValue] = useState("");
-  const { isLoading, data, isSuccess } = useGetAllProductsQuery({});
-  const [mainProducts, setMainProducts] = useState([]);
   const [products, setProducts] = useState([]);
 
   const [framesProduct, setFramesProduct] = useState([]);
   const [partsProduct, setPartsProduct] = useState([]);
   const [partsIndex, setPartsIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [partState, setPartState] = useState<PartsType>(partsInitialState);
 
+  // ! search by main types starts here
+  const { data, isError, refetch } = useGetMainTypeProductsQuery({
+    type: selectManufacture,
+  });
+
   useEffect(() => {
-    if (isSuccess) {
-      setMainProducts(data.products);
-      if (mainProducts.length !== 0) {
-        let mainArray = mainProducts.filter((item: any) => {
-          let title = item.BreadcrumbsH1.trim();
-          let titleArray = title.split(" ");
-          title = titleArray[0];
-          // console.log(`Title is : ${title}`);
-          return title === selectManufacture;
-        });
-        setProducts(mainArray);
+    // const fetchData = async () => {
+    //   console.log(`Main Type is : ${selectManufacture}`);
+    //   setIsLoading(true);
+    //   console.log(`Loading ...`);
+    //   await refetch();
+    //   setIsLoading(false);
+    //   console.log(`Loading Complete`);
+    // };
+    if (data) {
+      setProducts(data.products);
+      // console.log("Main Data");
+      // console.log(data);
+      setIsLoading(false);
+      if (isLoading) {
+        console.log(`Loading ...`);
+      } else {
+        console.log(`Loading Complete`);
       }
     }
-  }, [data, isSuccess, mainProducts, selectManufacture]);
+
+    if (isError) {
+      console.log(`Getting isError`);
+    }
+    // fetchData();
+  }, [data, isError]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      console.log(`Loading ...`);
+      await refetch();
+      setIsLoading(false);
+      console.log(`Loading Complete`);
+    };
+
+    fetchData();
+  }, [selectManufacture]);
+
+  // ! search by main types ends here
 
   // handle manufacturer
   const handleManufacturerChange = (e: any) => {
@@ -70,79 +102,6 @@ function SearchInput() {
     let valueSearch = e.target.value;
     let value = valueSearch;
     setSearchValue(value); // Update the selectedYears state with the selected option
-  };
-
-  const handleChassisSearch = () => {
-    if (selectSearchType === "Chassis" && searchValue !== "") {
-      const dataFrames = mainProducts.filter((item: any) => {
-        const frame = item.Frames.trim();
-        const frameArray = frame.split(", ");
-        const resultFrame = frameArray.find(
-          (frame: any) => frame === searchValue
-        );
-        if (resultFrame === searchValue) {
-          return item;
-        }
-      });
-      setFramesProduct(dataFrames);
-    }
-  };
-
-  const handlePartsSearch = () => {
-    if (selectSearchType === "Parts Number" && searchValue !== "") {
-      // let indexPart = 0;
-      const href_number = searchValue;
-      mainProducts.filter((product: any) => {
-        const listHref = product.ListOfHrefs;
-        let bread = product.BreadcrumbsH1.trim();
-        let breadArray = bread.split(",");
-        bread = breadArray[0];
-
-        const frame = product.Frames.trim();
-
-        listHref.filter((listHref: any) => {
-          const cardList = listHref.cards;
-
-          const hrefNumberList = cardList.filter((href: any) => {
-            const hrefNumber = href.hrefNumbers;
-            const hrefName = href.hrefNames;
-            const hrefPrice = href.hrefPrices;
-
-            const productHrefList = hrefNumber.filter(
-              (item: any, index: number) => {
-                if (item === href_number) {
-                  setPartsIndex(index);
-                  const name = hrefName[index];
-                  const price = hrefPrice[index];
-                  // console.log(name)
-                  setPartState({
-                    ...partState,
-                    partNumber: item,
-                    partName: name,
-                    partPrice: price,
-                    image: href.ImageLink,
-                    title: href.Alt,
-                    h1Tag: href.hrefH1,
-                    subcategory: bread,
-                    frames: frame,
-                  });
-                  return item;
-                }
-              }
-            );
-
-            if (productHrefList.length !== 0) {
-              return productHrefList;
-            }
-          });
-
-          if (hrefNumberList.length !== 0) {
-            // console.log(hrefNumberList);
-            setPartsProduct(hrefNumberList);
-          }
-        });
-      });
-    }
   };
 
   return (
@@ -164,7 +123,10 @@ function SearchInput() {
                     value={searchValue}
                     onChange={handleSetSearchValue}
                   />
-                  <button onClick={handleChassisSearch} className="pr-4">
+                  <button
+                    // onClick={handleChassisSearch}
+                    className="pr-4"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -188,7 +150,10 @@ function SearchInput() {
                     value={searchValue}
                     onChange={handleSetSearchValue}
                   />
-                  <button onClick={handlePartsSearch} className="pr-4">
+                  <button
+                    // onClick={handlePartsSearch}
+                    className="pr-4"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"

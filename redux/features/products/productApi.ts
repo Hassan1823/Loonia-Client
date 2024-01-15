@@ -40,9 +40,9 @@ export const productApi = apiSlice.injectEndpoints({
       }),
     }),
     //~ get api by main type
-    getProductsByMainTypes: builder.query({
-      query: (type) => ({
-        url: "products-by-type",
+    getProductsByMainTypes: builder.mutation({
+      query: ({ type }) => ({
+        url: `products-by-type?type=${type}`,
         method: "GET",
         credentials: "include" as const,
       }),
@@ -54,9 +54,17 @@ export const productApi = apiSlice.injectEndpoints({
         url: "products-by-frames",
         method: "GET",
         credentials: "include" as const,
-        
       }),
     }),
+
+    // ! get main type products
+    getMainTypeProducts:builder.query({
+      query:({type})=> ({
+        url:`/main-type-products/${type}`,
+        method:"GET",
+        credentials:"include" as const
+      })
+    })
   }),
 });
 
@@ -66,6 +74,7 @@ export const {
   useGetSingleProductQuery,
   useGetSubCategoriesProductsQuery,
   useGetProductCardsQuery,
-  useGetProductsByMainTypesQuery,
   useGetProductByFramesQuery,
+  useGetProductsByMainTypesMutation,
+  useGetMainTypeProductsQuery
 } = productApi;
