@@ -17,7 +17,17 @@ export const adminApi = apiSlice.injectEndpoints({
         credentials: `include` as const,
       }),
     }),
+
+    // ~ get all notifications
+    getNotifications: builder.query({
+      query: () => ({
+        url: `get-all-notifications`,
+        method: `GET`,
+        credentials: `include` as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetUsersQuery, useGetOrdersQuery } = adminApi;
+export const { useGetUsersQuery, useGetOrdersQuery, useGetNotificationsQuery } =
+  adminApi;

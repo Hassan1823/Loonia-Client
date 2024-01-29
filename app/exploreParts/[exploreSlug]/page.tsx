@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Heading from "@/app/utils/Heading";
 import Header from "@/app/components/Header";
+import dummyImage from "@/public/dummy.webp";
 
 type Props = {};
 
@@ -29,6 +30,12 @@ const Page: React.FC<Props> = ({ params }: any) => {
       console.log(`No data found`);
     }
   }, [isSuccess, data]);
+
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = () => {
+    setImageError(true);
+    // console.log(`Image Error is : ${imageError}`);
+  };
 
   return (
     <div className="w-full min-h-screen h-auto">
@@ -82,10 +89,11 @@ const Page: React.FC<Props> = ({ params }: any) => {
                           <span className="loading loading-infinity loading-md"></span>
                         ) : ( */}
                         <img
-                          src={data.ImageLink}
+                          src={imageError ? dummyImage : data.ImageLink}
                           alt={data.Frames}
                           // width={150}
                           height={100}
+                          onError={handleImageError}
                           className=" object-contain rounded-md my-4 lg:w-56 md:w-44 w-36 border"
                         />
                         {/* // )} */}

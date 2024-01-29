@@ -13,6 +13,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import dummyImage from "@/public/dummy.webp";
 
 type Props = {};
 
@@ -154,6 +155,12 @@ const Page = ({ params }: any) => {
   let pPrice = "";
   let pNumber = "";
 
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = () => {
+    setImageError(true);
+    // console.log(`Image Error is : ${imageError}`);
+  };
+
   return (
     <>
       <div className="w-full min-h-screen h-auto">
@@ -193,10 +200,13 @@ const Page = ({ params }: any) => {
                 <div className="">
                   <div className="w-full h-auto flex justify-center items-center my-5">
                     <Image
-                      src={(itemDesc as any).ImageLink}
+                      src={
+                        imageError ? dummyImage : (itemDesc as any).ImageLink
+                      }
                       alt={(itemDesc as any).Alt}
                       width={300}
                       height={100}
+                      onError={handleImageError}
                       className="object-contain rounded-lg"
                     />
                   </div>

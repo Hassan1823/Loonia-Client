@@ -8,11 +8,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Heading from "@/app/utils/Heading";
 import Header from "@/app/components/Header";
+import dummyImage from "@/public/dummy.webp";
 
 type Props = {};
 
 const Page = ({ params }: any) => {
-
   const [open, setOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(0);
   const [route, setRoute] = useState("Login");
@@ -51,6 +51,12 @@ const Page = ({ params }: any) => {
   // console.log(itemDesc.length !== 0 ? itemDesc : "null");
   // console.log(data)
 
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = () => {
+    setImageError(true);
+    // console.log(`Image Error is : ${imageError}`);
+  };
+
   return (
     <div className="w-full min-h-screen h-auto">
       <Heading
@@ -65,49 +71,50 @@ const Page = ({ params }: any) => {
         setRoute={setRoute}
         route={route}
       />
-    <>
-      {/* main container */}
-      <div className="w-full min-h-screen h-auto flex flex-col lg:px-32 md:px-12 px-4 text-center justify-start">
-        {/* heading */}
-        <h1 className="lg:text-4xl text-2xl font-semibold text-yellow-500 py-6">
-          Choose schema for
-        </h1>
-        <h1 className="lg:text-2xl md:text-xl text-lg font-semibold text-yellow-500">
-          {schema ? item : "Nothing To Show"}
-        </h1>
-        {/* parts cards */}
+      <>
+        {/* main container */}
+        <div className="w-full min-h-screen h-auto flex flex-col lg:px-32 md:px-12 px-4 text-center justify-start">
+          {/* heading */}
+          <h1 className="lg:text-4xl text-2xl font-semibold text-yellow-500 py-6">
+            Choose schema for
+          </h1>
+          <h1 className="lg:text-2xl md:text-xl text-lg font-semibold text-yellow-500">
+            {schema ? item : "Nothing To Show"}
+          </h1>
+          {/* parts cards */}
 
-        <div className="w-full h-auto flex items-center justify-center gap-2 my-12">
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <>
-              <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-2 sm:gap-8 lg:gap-14">
-                {itemDesc.map((item: any, index: number) => {
-                  return (
-                    <Link
-                      key={index}
-                      href={`${pathname}/${item.Alt}`}
-                      passHref
-                      className="sm:w-48 w-auto h-56 sm:p-0 p-1 flex flex-col hover:shadow-xl hover:border hover:duration-300 hover:scale-105 hover:border-opacity-10 rounded-md items-center justify-around text-yellow-500 hover:bg-slate-100 hover:bg-opacity-10"
-                    >
-                      <Image
-                        src={item.ImageLink}
-                        alt={item.Alt}
-                        width={200}
-                        height={200}
-                        className="object-contain rounded-md lg:w-52 md:w-44 w-40 h-40"
-                      />
-                      <span className="lg:text-sm text-xs">{item.Alt}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </>
-          )}
+          <div className="w-full h-auto flex items-center justify-center gap-2 my-12">
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-2 sm:gap-8 lg:gap-14">
+                  {itemDesc.map((item: any, index: number) => {
+                    return (
+                      <Link
+                        key={index}
+                        href={`${pathname}/${item.Alt}`}
+                        passHref
+                        className="sm:w-48 w-auto h-56 sm:p-0 p-1 flex flex-col hover:shadow-xl hover:border hover:duration-300 hover:scale-105 hover:border-opacity-10 rounded-md items-center justify-around text-yellow-500 hover:bg-slate-100 hover:bg-opacity-10"
+                      >
+                        <Image
+                          src={imageError ? dummyImage : item.ImageLink}
+                          alt={item.Alt}
+                          width={200}
+                          height={200}
+                          onError={handleImageError}
+                          className="object-contain rounded-md lg:w-52 md:w-44 w-40 h-40"
+                        />
+                        <span className="lg:text-sm text-xs">{item.Alt}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </>
+      </>
     </div>
   );
 };

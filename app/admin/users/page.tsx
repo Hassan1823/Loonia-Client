@@ -16,10 +16,7 @@ const UsersDashboard = (props: Props) => {
       console.log(data.users);
     }
     if (error) {
-      if ("data" in error) {
-        const errorMessage = error as any;
-        toast.error(errorMessage.error.massage);
-      }
+      console.log(error)
     }
   }, [isSuccess, data, error]);
   return (

@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "./Loader";
 import { useAddToCartMutation } from "@/redux/features/order/orderApi";
 import toast from "react-hot-toast";
+
+import dummyImage from "../../public/dummy.webp";
 
 type Props = {
   selectSearchType: string;
@@ -24,10 +26,20 @@ const CarsCards: React.FC<Props> = ({
   framesProduct,
   partState,
 }) => {
-  let productLimit = 10;
-  const handleProductLimit = () => {
-    productLimit = productLimit + 10;
-    console.log(`Product Limit is : ${productLimit}`);
+  // ! image loader
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+  };
+  // ! image loader
+
+  const [productLimit, setProductLimit] = useState(10);
+
+  // existing code...
+
+  const handleLoadMore = () => {
+    setProductLimit((prevLimit) => prevLimit + 10);
   };
 
   useEffect(() => {
@@ -71,6 +83,12 @@ const CarsCards: React.FC<Props> = ({
     }
   }, [addToCartSuccess, addToCartError]);
 
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = () => {
+    setImageError(true);
+    // console.log(`Image Error is : ${imageError}`);
+  };
+
   return (
     <div className="w-full h-auto">
       {/* cards cards start here*/}
@@ -103,10 +121,11 @@ const CarsCards: React.FC<Props> = ({
                         className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
                       >
                         <Image
-                          src={data.ImageLink}
+                          src={imageError ? dummyImage : data.ImageLink}
                           alt={family}
                           width={200}
                           height={100}
+                          onError={handleImageError}
                           className=" object-contain rounded-md my-4 border"
                         />
                         <span className="text-yellow-500 hover:text-white">
@@ -165,10 +184,11 @@ const CarsCards: React.FC<Props> = ({
                 <div className="">
                   <div className="w-full h-auto flex justify-center items-center my-5">
                     <Image
-                      src={partState.image}
+                      src={imageError ? dummyImage : partState.image}
                       alt={partState.title}
                       width={350}
                       height={200}
+                      onError={handleImageError}
                       className="object-contain rounded-lg"
                     />
                   </div>
@@ -220,7 +240,9 @@ const CarsCards: React.FC<Props> = ({
                                   productId: partState.productId,
                                   hrefNumbers: partState.partNumber,
                                   hrefNames: partState.partName,
-                                  hrefPrices: calculateTwentyPercent(partState.partPrice),
+                                  hrefPrices: calculateTwentyPercent(
+                                    partState.partPrice
+                                  ),
                                 })
                               }
                             >
@@ -260,44 +282,47 @@ const CarsCards: React.FC<Props> = ({
               <Loader />
             </>
           ) : !isLoading && products.length !== 0 ? (
-            <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-4 md:gap-6 lg:gap-10 py-10">
-              {products.slice(0, 10).map((data: any, index: number) => {
-                // title
-                let pTitle = data.BreadcrumbsH1.trim();
-                let pTitleArray = pTitle.split(" ");
-                pTitle = pTitleArray[0] + " " + pTitleArray[1];
+            <div className="w-full h-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 place-items-center gap-4 md:gap-6 lg:gap-10 py-10">
+              {products
+                .slice(0, productLimit)
+                .map((data: any, index: number) => {
+                  // title
+                  let pTitle = data.BreadcrumbsH1.trim();
+                  let pTitleArray = pTitle.split(" ");
+                  pTitle = pTitleArray[0] + " " + pTitleArray[1];
 
-                // family
-                let family = data.Frames.trim();
-                let familyArray = family.split(", ");
-                family = familyArray[0];
-                return (
-                  <div className="" key={index}>
-                    <Link
-                      href={`/exploreParts/${pTitle}/${data._id}`}
-                      passHref
-                      className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
-                    >
-                      <Image
-                        src={data.ImageLink}
-                        alt={family}
-                        width={200}
-                        height={100}
-                        className="object-contain rounded-md my-4 border"
-                      />
-                      <span className="text-yellow-500 hover:text-white">
-                        {data.ParentTitle ? data.ParentTitle : pTitle}
-                      </span>
-                      <span className="text-white hover:text-yellow-500">
-                        {`(${family})`}
-                      </span>
-                      <span className="text-white hover:text-yellow-500">
-                        {data.Years}
-                      </span>
-                    </Link>
-                  </div>
-                );
-              })}
+                  // family
+                  let family = data.Frames.trim();
+                  let familyArray = family.split(", ");
+                  family = familyArray[0];
+                  return (
+                    <div className="" key={index}>
+                      <Link
+                        href={`/exploreParts/${pTitle}/${data._id}`}
+                        passHref
+                        className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
+                      >
+                        <Image
+                          src={imageError ? dummyImage : data.ImageLink}
+                          alt={family}
+                          width={200}
+                          height={100}
+                          onError={handleImageError}
+                          className="object-contain rounded-md my-4 border"
+                        />
+                        <span className="text-yellow-500 hover:text-white">
+                          {data.ParentTitle ? data.ParentTitle : pTitle}
+                        </span>
+                        <span className="text-white hover:text-yellow-500">
+                          {`(${family})`}
+                        </span>
+                        <span className="text-white hover:text-yellow-500">
+                          {data.Years}
+                        </span>
+                      </Link>
+                    </div>
+                  );
+                })}
             </div>
           ) : (
             <>
@@ -309,11 +334,11 @@ const CarsCards: React.FC<Props> = ({
           {/* cards cards end here*/}
 
           <div className="w-full h-auto flex justify-center">
-            {products.length > 10 && (
+            {products.length > productLimit && (
               <button
                 // href={`/exploreParts`}
                 // passHref
-                onClick={handleProductLimit}
+                onClick={handleLoadMore}
                 className="p-2 mt-5 bg-yellow-500 text-white
         px-4 rounded-full 
         hover:scale-105 transition-all my-8"
