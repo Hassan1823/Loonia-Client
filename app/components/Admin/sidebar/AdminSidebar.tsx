@@ -1,31 +1,20 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import "react-pro-sidebar/dist/css/styles.css";
-import {
-  HomeOutlinedIcon,
-  ArrowForwardIosIcon,
-  ArrowBackIosIcon,
-  PeopleOutlinedIcon,
-  ReceiptOutlinedIcon,
-  BarChartOutlinedIcon,
-  MapOutlinedIcon,
-  GroupsIcon,
-  OndemandVideoIcon,
-  VideoCallIcon,
-  WebIcon,
-  QuizIcon,
-  WysiwygIcon,
-  ManageHistoryIcon,
-  SettingsIcon,
-  ExitToAppIcon,
-} from "./Icons";
-import avatarDefault from "../../../../public/dp.jpg";
-import { useSelector } from "react-redux";
-import Link from "next/link";
 import Image from "next/image";
-import { PropaneOutlined } from "@mui/icons-material";
+import Link from "next/link";
+import { FC, useEffect, useState } from "react";
+import { Menu, MenuItem, ProSidebar } from "react-pro-sidebar";
+import "react-pro-sidebar/dist/css/styles.css";
+import { useSelector } from "react-redux";
+import avatarDefault from "../../../../public/dp.jpg";
+import {
+  ArrowBackIosIcon,
+  ArrowForwardIosIcon,
+  ExitToAppIcon,
+  GroupsIcon,
+  HomeOutlinedIcon,
+  ReceiptOutlinedIcon,
+} from "./Icons";
 // import {useTheme} from 'next-theme'
 
 interface Props {
@@ -89,16 +78,17 @@ const Sidebar = () => {
           color: "#fff",
         },
       }}
-      className="bg-[#111C43]"
+      className="bg-black"
+      
     >
       <ProSidebar
         collapsed={isCollapsed}
         style={{
-          position: "fixed",
+          // position: "fixed",
           top: 0,
           left: 0,
           height: "100vh",
-          width: isCollapsed ? "0%" : "16%",
+          // width: isCollapsed ? "0%" : "15%",
         }}
       >
         <Menu iconShape="square">
@@ -106,7 +96,7 @@ const Sidebar = () => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <ArrowForwardIosIcon /> : undefined}
             style={{
-              margin: "10px 0 20px 0",
+              margin: "15px 0 20px 0",
             }}
           >
             {!isCollapsed && (
@@ -114,19 +104,19 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="15px"
+                ml="0px"
               >
-                <Link href="/admin">
-                  <h3 className="text-[22px] uppercase text-[#EAB308] text-center">
-                    Loonia Traders
-                  </h3>
-                </Link>
                 <IconButton
                   onClick={() => setIsCollapsed(!isCollapsed)}
                   className="inline-block"
                 >
                   <ArrowBackIosIcon className="text-[#ffffffc1]" />
                 </IconButton>
+                <Link href={`/admin`}>
+                  <h5 className="text-[18px] uppercase text-[#EAB308] text-center">
+                    Loonia Traders
+                  </h5>
+                </Link>
               </Box>
             )}
           </MenuItem>
@@ -160,7 +150,7 @@ const Sidebar = () => {
                   className="!text-[20px] text-[#ffffffc1] capitalize"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  - {user?.role}
+                  {user?.role}
                 </Typography>
               </Box>
             </Box>
@@ -175,14 +165,6 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
 
-            <Typography
-              variant="h5"
-              className="!text-[20px] text-[#EAB308] capitalize !font-[400]"
-              sx={{ m: "15px 0 5px 25px" }}
-            >
-              {!isCollapsed && "Data"}
-            </Typography>
-
             <Item
               title="User"
               to="/admin/users"
@@ -192,132 +174,13 @@ const Sidebar = () => {
             />
 
             <Item
-              title="Invoices"
-              to="/admin/invoices"
+              title="Orders"
+              to="/admin/orders"
               icon={<ReceiptOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
 
-            <Typography
-              variant="h5"
-              className="!text-[18px] text-[#EAB308] capitalize !font-[400]"
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              {!isCollapsed && "Content"}
-            </Typography>
-
-            <Item
-              title="Create Product"
-              to="/admin/create-product"
-              icon={<VideoCallIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Live Course"
-              to="/admin/course"
-              icon={<OndemandVideoIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h5"
-              className="!text-[18px] text-[#EAB308] capitalize !font-[400]"
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              {!isCollapsed && "Customization"}
-            </Typography>
-
-            <Item
-              title="Hero"
-              to="/admin/hero"
-              icon={<WebIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="FAQ"
-              to="/admin/faq"
-              icon={<QuizIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Categories"
-              to="/admin/categories"
-              icon={<WysiwygIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h5"
-              className="!text-[18px] text-[#EAB308] capitalize !font-[400]"
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              {!isCollapsed && "Controllers"}
-            </Typography>
-
-            <Item
-              title="Manage Team"
-              to="/admin/team"
-              icon={<PropaneOutlined />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h5"
-              className="!text-[18px] text-[#EAB308] capitalize !font-[400]"
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              {!isCollapsed && "Analytics"}
-            </Typography>
-
-            <Item
-              title="Products Analytics"
-              to="/admin/products-analytics"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Order Analytics"
-              to="/admin/order-analytics"
-              icon={<MapOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="User Analytics"
-              to="/admin/user-analytics"
-              icon={<ManageHistoryIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h5"
-              className="!text-[18px] text-[#EAB308] capitalize !font-[400]"
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              {!isCollapsed && "Extras"}
-            </Typography>
-
-            <Item
-              title="Settings"
-              to="/admin/settings"
-              icon={<SettingsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             <div onClick={logoutHandler} className="">
               <Item
                 title="Exit"
@@ -334,6 +197,6 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar
+export default Sidebar;
 
 // export default Item;

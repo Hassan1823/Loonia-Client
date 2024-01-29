@@ -6,10 +6,17 @@ import { useGetSingleProductQuery } from "@/redux/features/products/productApi";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Heading from "@/app/utils/Heading";
+import Header from "@/app/components/Header";
 
 type Props = {};
 
 const Page = ({ params }: any) => {
+
+  const [open, setOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState(0);
+  const [route, setRoute] = useState("Login");
+
   const [itemDesc, setItemDesc] = useState([]);
   const [product, setProduct] = useState([]);
   const schema = params;
@@ -45,6 +52,19 @@ const Page = ({ params }: any) => {
   // console.log(data)
 
   return (
+    <div className="w-full min-h-screen h-auto">
+      <Heading
+        title={`${item} ${id}`}
+        description={`This is the ${item} car with the id of ${id}`}
+        keywords={`loonia traders, car parts, parts for ${item}, parts for ${id}, ${item} for ${id}`}
+      />
+      <Header
+        open={open}
+        setOpen={setOpen}
+        activeItem={activeItem}
+        setRoute={setRoute}
+        route={route}
+      />
     <>
       {/* main container */}
       <div className="w-full min-h-screen h-auto flex flex-col lg:px-32 md:px-12 px-4 text-center justify-start">
@@ -88,6 +108,7 @@ const Page = ({ params }: any) => {
         </div>
       </div>
     </>
+    </div>
   );
 };
 

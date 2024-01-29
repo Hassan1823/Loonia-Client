@@ -22,7 +22,20 @@ export const orderApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    addToCart: builder.mutation({
+      query: ({ productId, hrefNumbers, hrefNames, hrefPrices }) => ({
+        url: `product-order`,
+        method: `POST`,
+        body: {
+          productId,
+          hrefNumbers,
+          hrefNames,
+          hrefPrices,
+        },
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useCreateOrderMutation } = orderApi;
+export const { useCreateOrderMutation, useAddToCartMutation } = orderApi;

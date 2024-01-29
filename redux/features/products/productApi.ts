@@ -48,23 +48,43 @@ export const productApi = apiSlice.injectEndpoints({
       }),
     }),
 
-    // ~ get cars by frame number
-    getProductByFrames: builder.query({
-      query: (frames) => ({
-        url: "products-by-frames",
+    // // ~ get cars by frame number
+    // getProductByFrames: builder.query({
+    //   query: (frames) => ({
+    //     url: "products-by-frames",
+    //     method: "GET",
+    //     credentials: "include" as const,
+    //   }),
+    // }),
+
+    // ! get main type products
+    getMainTypeProducts: builder.query({
+      query: ({ type }) => ({
+        url: `/main-type-products/${type}`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
 
-    // ! get main type products
-    getMainTypeProducts:builder.query({
-      query:({type})=> ({
-        url:`/main-type-products/${type}`,
-        method:"GET",
-        credentials:"include" as const
-      })
-    })
+    // ! get products by frame number or chassis
+
+    getProductsByChassis: builder.query({
+      query: ({ frames }) => ({
+        url: `/products-by-frames/${frames}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+
+    // ! get products by parts number
+    getProductsByPartNumber: builder.query({
+      query: ({ href_number }) => ({
+        url: `/products-by-hrefNumber`,
+        method: "GET",
+        body: { href_number },
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -74,7 +94,8 @@ export const {
   useGetSingleProductQuery,
   useGetSubCategoriesProductsQuery,
   useGetProductCardsQuery,
-  useGetProductByFramesQuery,
   useGetProductsByMainTypesMutation,
-  useGetMainTypeProductsQuery
+  useGetMainTypeProductsQuery,
+  useGetProductsByChassisQuery,
+  useGetProductsByPartNumberQuery,
 } = productApi;

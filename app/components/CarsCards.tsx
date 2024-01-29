@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import Loader from "./Loader";
+import { useAddToCartMutation } from "@/redux/features/order/orderApi";
+import toast from "react-hot-toast";
 
 type Props = {
   selectSearchType: string;
@@ -22,6 +24,12 @@ const CarsCards: React.FC<Props> = ({
   framesProduct,
   partState,
 }) => {
+  let productLimit = 10;
+  const handleProductLimit = () => {
+    productLimit = productLimit + 10;
+    console.log(`Product Limit is : ${productLimit}`);
+  };
+
   useEffect(() => {
     console.log(
       framesProduct.length !== 0 ? framesProduct : "no data for frames"
@@ -47,18 +55,34 @@ const CarsCards: React.FC<Props> = ({
     }
   };
 
+  const [addToCart, { isSuccess: addToCartSuccess, error: addToCartError }] =
+    useAddToCartMutation({});
+
+  useEffect(() => {
+    if (addToCartSuccess) {
+      // refetchCart();
+      toast.success(`Added to Cart`);
+    }
+    if (addToCartError) {
+      if ("data" in addToCartError) {
+        const errorMessage = addToCartError as any;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [addToCartSuccess, addToCartError]);
+
   return (
-    <div className="w-full min-h-screen h-auto">
+    <div className="w-full h-auto">
       {/* cards cards start here*/}
 
       {selectSearchType === "Chassis" ? (
         <>
           {" "}
-          {searchValue === " " || !searchValue ? (
+          {isLoading ? (
             <>
               <Loader />
             </>
-          ) : !isLoading && framesProduct.length !== 0 ? (
+          ) : framesProduct.length !== 0 ? (
             <div className="w-full h-auto flex justify-center items-center py-10">
               {framesProduct &&
                 framesProduct.slice(0, 1).map((data: any, index: number) => {
@@ -102,7 +126,7 @@ const CarsCards: React.FC<Props> = ({
           ) : (
             <>
               <h1 className="w-full min-h-screen h-auto text-center mt-24">
-                Sorry But That Does Not Match Any Product
+                Please Enter Some Value Or Their Might Be Some Error
               </h1>
             </>
           )}
@@ -121,9 +145,9 @@ const CarsCards: React.FC<Props> = ({
         </>
       ) : selectSearchType === "Parts Number" ? (
         <>
-          {isLoading ? (
+          {isLoading && partState.title === "" ? (
             <Loader />
-          ) : !isLoading && partState ? (
+          ) : !isLoading && partState.title !== "" ? (
             <div className="w-full min-h-screen h-auto mt-12">
               <h1 className="text-3xl font-bold text-yellow-500 text-center my-5">
                 Choose Your favourite Part
@@ -133,9 +157,9 @@ const CarsCards: React.FC<Props> = ({
                   <h1 className="text-2xl font-bold text-yellow-500">
                     Details :
                   </h1>
-                  <h1>{partState.subcategory}</h1>
-                  <h1>{partState.frames}</h1>
+                  {/* <h1>{partState.subcategory}</h1> */}
                   <h1>{partState.title}</h1>
+                  <h1>{partState.frames}</h1>
                   <h1>{partState.h1Tag}</h1>
                 </div>
                 <div className="">
@@ -189,7 +213,17 @@ const CarsCards: React.FC<Props> = ({
                           partState.partName !== "Not available" &&
                           partState.partName !== "Out of stock" &&
                           partState.partName !== "-" && (
-                            <button className="bg-yellow-500 text-white rounded-md p-2 hover:scale-110 hover:duration-200 ">
+                            <button
+                              className="bg-yellow-500 text-white rounded-md p-2 hover:scale-110 hover:duration-200 "
+                              onClick={() =>
+                                addToCart({
+                                  productId: partState.productId,
+                                  hrefNumbers: partState.partNumber,
+                                  hrefNames: partState.partName,
+                                  hrefPrices: calculateTwentyPercent(partState.partPrice),
+                                })
+                              }
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -215,7 +249,7 @@ const CarsCards: React.FC<Props> = ({
             </div>
           ) : (
             <h1 className="w-full min-h-screen h-auto text-center mt-24">
-              No Related Data Found
+              Please wait ...
             </h1>
           )}
         </>
@@ -227,7 +261,7 @@ const CarsCards: React.FC<Props> = ({
             </>
           ) : !isLoading && products.length !== 0 ? (
             <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-4 md:gap-6 lg:gap-10 py-10">
-              {products.slice(0, 15).map((data: any, index: number) => {
+              {products.slice(0, 10).map((data: any, index: number) => {
                 // title
                 let pTitle = data.BreadcrumbsH1.trim();
                 let pTitleArray = pTitle.split(" ");
@@ -275,15 +309,18 @@ const CarsCards: React.FC<Props> = ({
           {/* cards cards end here*/}
 
           <div className="w-full h-auto flex justify-center">
-            <Link
-              href={`/exploreParts`}
-              passHref
-              className="p-2 mt-5 bg-yellow-500 text-white
+            {products.length > 10 && (
+              <button
+                // href={`/exploreParts`}
+                // passHref
+                onClick={handleProductLimit}
+                className="p-2 mt-5 bg-yellow-500 text-white
         px-4 rounded-full 
         hover:scale-105 transition-all my-8"
-            >
-              Explore More
-            </Link>
+              >
+                Load More
+              </button>
+            )}
           </div>
         </>
       )}

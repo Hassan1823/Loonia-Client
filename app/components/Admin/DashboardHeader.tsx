@@ -9,7 +9,7 @@ const DashboardHeader = (props: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="w-full flex items-center justify-end p-6 fixed top-5 right-0">
+    <div className="w-full flex z-50 items-center justify-end p-6 fixed top-5 right-0">
       <div
         className="relative cursor-pointer m-2"
         onClick={() => setOpen(!open)}

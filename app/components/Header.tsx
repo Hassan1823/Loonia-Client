@@ -19,6 +19,7 @@ import {
   useSocialAuthMutation,
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { useUserCartQuery } from "@/redux/features/user/userApi";
 
 type Props = {
   open: boolean;
@@ -26,9 +27,19 @@ type Props = {
   activeItem: number;
   route: string;
   setRoute: (route: string) => void;
+  cartLength?: number;
+  setCartLength?: (cartLength: number) => void;
 };
 
-const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
+const Header: FC<Props> = ({
+  activeItem,
+  setOpen,
+  route,
+  setRoute,
+  open,
+  cartLength,
+  setCartLength,
+}) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
   const { user } = useSelector((state: any) => state.auth);
@@ -50,6 +61,10 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
           avatar: data?.user?.image,
         });
       }
+    } else {
+      console.log(`----------------------- `);
+      console.log(user ? user.products.length : 0);
+      console.log(`----------------------- `);
     }
     if (data === null) {
       if (isSuccess) {
@@ -133,7 +148,11 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
                           />
                         </svg>
                         <span className="badge badge-sm indicator-item">
-                          {user?.products?.length ? user.products.length : 0}
+                          {cartLength !== 0 && cartLength
+                            ? cartLength
+                            : user.products
+                            ? user.products.length
+                            : 0}
                         </span>
                       </div>
                     </div>
@@ -190,7 +209,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, setRoute, open }) => {
               <br />
               <br />
               <p className="text-[16px] px-2 pl-5 text-white ">
-                Copyright &copy; 2023 Loonia Traders
+                Copyright &copy; 2024 Loonia Traders
               </p>
             </div>
           </div>
