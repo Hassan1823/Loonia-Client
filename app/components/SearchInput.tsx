@@ -272,7 +272,7 @@ function SearchInput() {
                     </svg>
                   </button>
                 </>
-              ) : selectSearchType === "Parts Number" ? (
+              ) : selectSearchType === "Parts" ? (
                 <>
                   <input
                     type="text"
