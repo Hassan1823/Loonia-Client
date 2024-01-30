@@ -22,14 +22,13 @@ const Profile: FC<Props> = ({ user }) => {
   const [active, setActive] = useState(1);
 
   const logOutHandler = async () => {
-    await signOut();
+    await signOut({ redirect: true, callbackUrl: "/" });
     setLogout(true);
-    //     redirect("/");
   };
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 85) {
+      if (window.scrollY > 80) {
         setScroll(true);
       } else {
         setScroll(false);

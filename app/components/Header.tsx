@@ -108,23 +108,46 @@ const Header: FC<Props> = ({
             <div className="">
               <Link
                 href={"/"}
-                className="text-[25px] font-[500] hover:shadow-sm"
+                className="800px:text-4xl text-xl text-yellow-500 font-[500] hover:shadow-sm"
               >
                 Loonia Traders
               </Link>
             </div>
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2 ">
               <NavItems activeItem={activeItem} isMobile={false} />
 
-              {/* only for mobile */}
-              <div className="800px:hidden ">
+              {/*  for desktop */}
+              {user ? (
+                <Link href={"/profile"} className="ml-4">
+                  <Image
+                    src={user.avatar ? user.avatar?.url : avatar}
+                    alt="user profile picture"
+                    className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                    width={30}
+                    height={30}
+                    style={{
+                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
+                    }}
+                  />
+                </Link>
+              ) : (
+                <div className="flex ">
+                  <HiOutlineUserCircle
+                    size={25}
+                    className="cursor-pointer text-white"
+                    onClick={() => setOpen(true)}
+                  />
+                </div>
+              )}
+              <div className="800px:hidden ml-4 ">
                 <HiOutlineMenuAlt3
                   size={25}
                   className="cursor-pointer text-white"
                   onClick={() => setOpenSidebar(true)}
                 />
               </div>
-              <div className="hidden 800px:flex ">
+              {/* only for desktop */}
+              <div className="hidden 800px:flex">
                 <Link href={"/cart"} passHref>
                   <div className="dropdown dropdown-end">
                     <div
@@ -159,30 +182,6 @@ const Header: FC<Props> = ({
                   </div>
                 </Link>
               </div>
-
-              {/*  for desktop */}
-              {user ? (
-                <Link href={"/profile"}>
-                  <Image
-                    src={user.avatar ? user.avatar?.url : avatar}
-                    alt="user profile picture"
-                    className="w-[30px] h-[30px] rounded-full cursor-pointer"
-                    width={30}
-                    height={30}
-                    style={{
-                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
-                    }}
-                  />
-                </Link>
-              ) : (
-                <div className="flex ">
-                  <HiOutlineUserCircle
-                    size={25}
-                    className="cursor-pointer text-white"
-                    onClick={() => setOpen(true)}
-                  />
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -196,10 +195,12 @@ const Header: FC<Props> = ({
           >
             <div className="w-[70%] fixed z-[99999999999] h-screen bg-slate-900 bg-opacity-90 top-0 right-0">
               <NavItems activeItem={activeItem} isMobile={true} />
-              <IoIosCart
-                size={25}
-                className="cursor-pointer ml-5 my-2 text-white "
-              />
+              <Link href={`/cart`} passHref>
+                <IoIosCart
+                  size={25}
+                  className="cursor-pointer ml-5 my-2 text-white "
+                />
+              </Link>
               {/* <br />
               <HiOutlineUserCircle
                 size={25}

@@ -5,17 +5,24 @@ const Footer = () => {
   return (
     <div>
       <footer className="footer footer-center p-10 bg-black border-t  text-base-content rounded">
-        <nav className="grid grid-flow-col gap-4">
-          <Link href="/exploreParts" className="link link-hover">
-            Explore Parts
+        <nav className="flex flex-wrap justify-center items-center gap-4">
+          <Link href="/exploreParts" passHref className="link link-hover">
+            Products
           </Link>
-          <Link href="/contactUs" className="link link-hover">
-            Contact
+          <Link href="/about" passHref className="link link-hover">
+            About
           </Link>
-          <Link href="/cart" className="link link-hover">
+          <Link href="/privacy" passHref className="link link-hover">
+            Privacy
+          </Link>
+          <Link href="/faq" passHref className="link link-hover">
+            FAQ
+          </Link>
+
+          <Link href="/cart" passHref className="link link-hover">
             Cart
           </Link>
-          <Link href="/calculator" className="link link-hover">
+          <Link href="/calculator" passHref className="link link-hover">
             Calculator
           </Link>
         </nav>

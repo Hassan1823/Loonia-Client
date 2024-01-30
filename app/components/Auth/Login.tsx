@@ -134,11 +134,11 @@ const Login: FC<Props> = ({ setRoute, setOpen }) => {
             className="cursor-pointer mr-2"
             onClick={() => signIn("google")}
           />
-          <AiFillGithub
+          {/* <AiFillGithub
             size={30}
             className="cursor-pointer ml-2"
             onClick={() => signIn("github")}
-          />
+          /> */}
         </div>
 
         <h5 className="text-center pt-4 text-[14px] ">

@@ -12,15 +12,15 @@ function Hero() {
   };
 
   return (
-    <div className="grid grid-cols-1 1000px:grid-cols-2 p-12 h-auto">
+    <div className="grid grid-cols-1 1000px:grid-cols-2 place-items-center p-12 h-auto">
       <div className="flex flex-col justify-center items-start pl-12">
         <h2
-          className="text-[40px] md:text-[60px] 
+          className="text-4xl leading-normal md:text-[60px] 
                 font-bold "
         >
           OEM <span className="text-yellow-500">Parts</span> At <br /> Your Door
         </h2>
-        <h2 className="800px:text-[20px] text-[16px] text-gray-500 pr-20 mt-5">
+        <h2 className="800px:text-lg text-md text-gray-500 pr-20 mt-5">
           Choose your car parts and place order
         </h2>
         <button

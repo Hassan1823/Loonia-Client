@@ -117,13 +117,13 @@ const CarsCards: React.FC<Props> = ({
                     <div className="" key={index}>
                       <Link
                         href={`/exploreParts/${pTitle}/${data._id}`}
-                        // passHref
+                        passHref
                         className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
                       >
                         <Image
                           src={imageError ? dummyImage : data.ImageLink}
                           alt={family}
-                          width={200}
+                          width={300}
                           height={100}
                           onError={handleImageError}
                           className=" object-contain rounded-md my-4 border"
@@ -282,7 +282,7 @@ const CarsCards: React.FC<Props> = ({
               <Loader />
             </>
           ) : !isLoading && products.length !== 0 ? (
-            <div className="w-full h-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 place-items-center gap-4 md:gap-6 lg:gap-10 py-10">
+            <div className="w-full h-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 place-items-center gap-4 md:gap-6 py-10">
               {products
                 .slice(0, productLimit)
                 .map((data: any, index: number) => {
@@ -300,12 +300,12 @@ const CarsCards: React.FC<Props> = ({
                       <Link
                         href={`/exploreParts/${pTitle}/${data._id}`}
                         passHref
-                        className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
+                        className="w-64 h-auto rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
                       >
                         <Image
                           src={imageError ? dummyImage : data.ImageLink}
                           alt={family}
-                          width={200}
+                          width={220}
                           height={100}
                           onError={handleImageError}
                           className="object-contain rounded-md my-4 border"
