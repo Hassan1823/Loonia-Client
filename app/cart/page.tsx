@@ -1,26 +1,25 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
-import Protected from "../hooks/useProtected";
-import Heading from "../utils/Heading";
-import Header from "../components/Header";
+// Import necessary dependencies
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useUserCartQuery, useDeleteItemFromCartMutation } from "@/redux/features/user/userApi";
+import toast from "react-hot-toast";
 import Loader from "../components/Loader";
 import Footer from "../components/Footer";
-import {
-  useDeleteItemFromCartMutation,
-  useUserCartQuery,
-  useUserInfoQuery,
-} from "@/redux/features/user/userApi";
-import toast from "react-hot-toast";
+import Header from "../components/Header";
+import Heading from "../utils/Heading";
 
+// Define the CartItem type
 type CartItem = {
   hrefNames: string;
   hrefNumbers: string;
   hrefPrices: string;
+  _id: string; // Ensure to include the _id field used in handleDeleteItem
 };
 
-const Page = (props: CartItem) => {
+// Define the Page component
+const Page: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(0);
   const [route, setRoute] = useState("Login");
@@ -28,48 +27,21 @@ const Page = (props: CartItem) => {
   const [cartData, setCartData] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const { data, isLoading, isSuccess, refetch } = useUserCartQuery(
-    {},
-    { refetchOnMountOrArgChange: true }
-  );
+  const { data, isLoading, isSuccess, refetch } = useUserCartQuery({}, { refetchOnMountOrArgChange: true });
 
   useEffect(() => {
-    if (isLoading) {
-      console.log(`Loading ...`);
-    }
-    if (isSuccess) {
-      console.log(`user data is :`);
-      console.log(data);
+    if (isSuccess && data) {
       setCartData(data.products);
     }
-  }, [data, isLoading, isSuccess, cartData]);
+  }, [data, isSuccess]);
 
-  // ! delete item from cart
+  const [deleteItemFromCart] = useDeleteItemFromCartMutation();
 
-  const [deleteItemFromCart, { isSuccess: deleteSuccess, error: errorDelete }] =
-    useDeleteItemFromCartMutation({});
-
-  useEffect(() => {
-    if (deleteSuccess) {
-      refetch();
-      toast.success(`Product Deleted`);
-    }
-    if (errorDelete) {
-      if ("data" in errorDelete) {
-        const errorMessage = errorDelete as any;
-        toast.error(errorMessage.data.message);
-      }
-    }
-  }, [deleteSuccess, errorDelete, refetch]);
-
-  const handleDeleteItem = async (id: any) => {
-    const productId = id;
-
-    await deleteItemFromCart(productId);
-
-    console.log(`Product deleted for id ${productId}`);
+  const handleDeleteItem = async (id: string) => {
+    await deleteItemFromCart(id);
+    toast.success(`Product Deleted`);
+    refetch();
   };
-  let total = 0;
 
   useEffect(() => {
     let newTotal = 0;
@@ -79,6 +51,7 @@ const Page = (props: CartItem) => {
     });
     setTotalPrice(newTotal);
   }, [cartData]);
+
 
   return (
     <>
