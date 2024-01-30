@@ -116,29 +116,6 @@ const Header: FC<Props> = ({
             <div className="flex items-center gap-2 ">
               <NavItems activeItem={activeItem} isMobile={false} />
 
-              {/*  for desktop */}
-              {user ? (
-                <Link href={"/profile"} className="ml-4">
-                  <Image
-                    src={user.avatar ? user.avatar?.url : avatar}
-                    alt="user profile picture"
-                    className="w-[30px] h-[30px] rounded-full cursor-pointer"
-                    width={30}
-                    height={30}
-                    style={{
-                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
-                    }}
-                  />
-                </Link>
-              ) : (
-                <div className="flex ">
-                  <HiOutlineUserCircle
-                    size={25}
-                    className="cursor-pointer text-white"
-                    onClick={() => setOpen(true)}
-                  />
-                </div>
-              )}
               <div className="800px:hidden ml-4 ">
                 <HiOutlineMenuAlt3
                   size={25}
@@ -182,6 +159,29 @@ const Header: FC<Props> = ({
                   </div>
                 </Link>
               </div>
+              {/*  for desktop */}
+              {user ? (
+                <Link href={"/profile"} className="ml-4">
+                  <Image
+                    src={user.avatar ? user.avatar?.url : avatar}
+                    alt="user profile picture"
+                    className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                    width={30}
+                    height={30}
+                    style={{
+                      border: activeItem === 5 ? "2px solid #ffc107" : "none",
+                    }}
+                  />
+                </Link>
+              ) : (
+                <div className="flex ">
+                  <HiOutlineUserCircle
+                    size={25}
+                    className="cursor-pointer text-white"
+                    onClick={() => setOpen(true)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
