@@ -40,13 +40,13 @@ export const productApi = apiSlice.injectEndpoints({
       }),
     }),
     //~ get api by main type
-    getProductsByMainTypes: builder.mutation({
-      query: ({ type }) => ({
-        url: `products-by-type?type=${type}`,
-        method: "GET",
-        credentials: "include" as const,
-      }),
-    }),
+    // getProductsByMainTypes: builder.mutation({
+    //   query: ({ type }) => ({
+    //     url: `products-by-type?type=${type}`,
+    //     method: "GET",
+    //     credentials: "include" as const,
+    //   }),
+    // }),
 
     // // ~ get cars by frame number
     // getProductByFrames: builder.query({
@@ -59,8 +59,8 @@ export const productApi = apiSlice.injectEndpoints({
 
     // ! get main type products
     getMainTypeProducts: builder.query({
-      query: ({ type }) => ({
-        url: `/main-type-products/${type}`,
+      query: ({ type, prevLimit, limit }) => ({
+        url: `/main-type-products/${type}/${prevLimit}/${limit}`,
         method: "GET",
         credentials: "include" as const,
       }),
@@ -94,7 +94,7 @@ export const {
   useGetSingleProductQuery,
   useGetSubCategoriesProductsQuery,
   useGetProductCardsQuery,
-  useGetProductsByMainTypesMutation,
+  // useGetProductsByMainTypesMutation,
   useGetMainTypeProductsQuery,
   useGetProductsByChassisQuery,
   useGetProductsByPartNumberQuery,

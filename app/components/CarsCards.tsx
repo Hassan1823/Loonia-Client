@@ -16,6 +16,11 @@ type Props = {
   isLoading: boolean;
   framesProduct: any;
   partState: any;
+  productsLength: number;
+  handleLoadMore: () => void;
+  handleLoadPrev: () => void;
+  prev: number;
+  current: number;
 };
 
 const CarsCards: React.FC<Props> = ({
@@ -25,6 +30,11 @@ const CarsCards: React.FC<Props> = ({
   isLoading,
   framesProduct,
   partState,
+  productsLength,
+  handleLoadMore,
+  handleLoadPrev,
+  prev,
+  current,
 }) => {
   // ! image loader
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,9 +48,9 @@ const CarsCards: React.FC<Props> = ({
 
   // existing code...
 
-  const handleLoadMore = () => {
-    setProductLimit((prevLimit) => prevLimit + 10);
-  };
+  // const handleLoadMore = () => {
+  //   setProductLimit((prevLimit) => prevLimit + 10);
+  // };
 
   useEffect(() => {
     console.log(
@@ -333,17 +343,31 @@ const CarsCards: React.FC<Props> = ({
           )}
           {/* cards cards end here*/}
 
-          <div className="w-full h-auto flex justify-center">
-            {products.length > productLimit && (
+          <div className="w-full h-auto flex justify-center gap-1">
+            {productsLength > 10 && (
               <button
-                // href={`/exploreParts`}
-                // passHref
-                onClick={handleLoadMore}
-                className="p-2 mt-5 bg-yellow-500 text-white
-        px-4 rounded-full 
-        hover:scale-105 transition-all my-8"
+                disabled={prev <= 0}
+                onClick={handleLoadPrev}
+                className={`p-2 mt-5 bg-yellow-500 text-white
+        px-4 rounded-s-full 
+        hover:scale-105 transition-all my-8 ${
+          prev <= 0 && "cursor-not-allowed"
+        }`}
               >
-                Load More
+                Prev
+              </button>
+            )}
+            {productsLength > 10 && (
+              <button
+                disabled={current >= productsLength}
+                onClick={handleLoadMore}
+                className={`p-2 mt-5 bg-yellow-500 text-white
+        px-4  rounded-e-full
+        hover:scale-105 transition-all my-8 ${
+          current >= productsLength && "cursor-not-allowed"
+        }`}
+              >
+                Next
               </button>
             )}
           </div>

@@ -46,6 +46,10 @@ function SearchInput() {
   const [isLoading, setIsLoading] = useState(true);
   const [chassisValue, setChassisValue] = useState(searchValue);
 
+  const [prev, setPrev] = useState(0);
+  const [current, setCurrent] = useState(10);
+  const [totalLength, setTotalLength] = useState<number>(0);
+
   const [partState, setPartState] = useState<PartsType>(partsInitialState);
 
   // ! search by parts number starts here
@@ -184,20 +188,33 @@ function SearchInput() {
 
   // ~-------------------------------
   // ! search by main types starts here
-  const { data, isError, refetch } = useGetMainTypeProductsQuery({
-    type: selectManufacture,
-  });
+  const {
+    data,
+    isLoading: mainLoading,
+    isError,
+    refetch,
+  } = useGetMainTypeProductsQuery(
+    {
+      type: selectManufacture,
+      prevLimit: prev,
+      limit: current,
+    },
+    { refetchOnMountOrArgChange: true }
+  );
 
   useEffect(() => {
+    if (mainLoading) {
+      console.log(`Loading ...`);
+      setIsLoading(true);
+    } else {
+      console.log(`Loading Complete`);
+    }
     if (data) {
       setProducts(data.products);
+      setTotalLength(data.length);
+      console.log("Length is ", totalLength);
 
       setIsLoading(false);
-      if (isLoading) {
-        console.log(`Loading ...`);
-      } else {
-        console.log(`Loading Complete`);
-      }
     }
 
     if (isError) {
@@ -205,23 +222,32 @@ function SearchInput() {
     }
   }, [data, isError]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      console.log(`Loading ...`);
-      await refetch();
-      setIsLoading(false);
-      console.log(`Loading Complete`);
-    };
+  // useEffect(() => {
 
-    fetchData();
-  }, [selectManufacture]);
+  //   // const fetchData = async () => {
+  //   // setIsLoading(true);
+  //   // console.log(`Loading ...`);
+  //   // setIsLoading(false);
+  //   // console.log(`Loading Complete`);
+  //   // };
+
+  //   // fetchData();
+  // }, [selectManufacture, current, prev, refetch]);
 
   // ! search by main types ends here
 
   // handle manufacturer
   const handleManufacturerChange = (e: any) => {
-    setSelectManufacturer(e.target.value); // Update the selectedManufacturer state with the selected option
+    setSelectManufacturer(e.target.value);
+    handleMainRefetch(); // Update the selectedManufacturer state with the selected option
+  };
+
+  const handleMainRefetch = () => {
+    setIsLoading(true);
+    setPrev(0);
+    setCurrent(10);
+    console.log(`handling refetch ${prev} and ${current}`);
+    // refetch();
   };
 
   // handle search type
@@ -233,6 +259,32 @@ function SearchInput() {
     let valueSearch = e.target.value;
     let value = valueSearch;
     setSearchValue(value); // Update the selectedYears state with the selected option
+  };
+
+  // ! handle load more function
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    console.log(`Loading More `);
+    setPrev(current);
+    console.log(`prev :`, prev);
+    const curr = current + 10;
+    setCurrent(curr);
+    console.log(`current :`, current);
+
+    // refetch();
+  };
+  // ! handle load prev function
+  const handleLoadPrev = () => {
+    setIsLoading(true);
+    console.log(`Loading Prev `);
+    const pre = prev - 10;
+    console.log(`prev :`, pre);
+    setPrev(pre);
+    const curr = current - 10;
+    setCurrent(curr);
+    console.log(`current :`, current);
+
+    // refetch();
   };
 
   return (
@@ -342,6 +394,11 @@ function SearchInput() {
         products={products}
         framesProduct={framesProduct}
         partState={partState}
+        productsLength={totalLength}
+        handleLoadMore={handleLoadMore}
+        handleLoadPrev={handleLoadPrev}
+        prev={prev}
+        current={current}
       />
     </div>
   );
