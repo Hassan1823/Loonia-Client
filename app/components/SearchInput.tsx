@@ -61,7 +61,7 @@ function SearchInput() {
   } = useGetProductsByPartNumberQuery({ href_number: searchValue });
 
   useEffect(() => {
-    if (selectSearchType === "Parts Number" && searchValue !== "") {
+    if (selectSearchType === "Parts" && searchValue !== "") {
       if (partsData) {
         setIsLoading(false);
         // setPartsProduct(partsData.resultProducts);

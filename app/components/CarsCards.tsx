@@ -172,7 +172,7 @@ const CarsCards: React.FC<Props> = ({
             </Link>
           </div>
         </>
-      ) : selectSearchType === "Parts Number" ? (
+      ) : selectSearchType === "Parts" ? (
         <>
           {isLoading && partState.title === "" ? (
             <Loader />
