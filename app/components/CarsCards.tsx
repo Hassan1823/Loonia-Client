@@ -8,10 +8,11 @@ import { useAddToCartMutation } from "@/redux/features/order/orderApi";
 import toast from "react-hot-toast";
 
 import dummyImage from "../../public/dummy.webp";
+import { useUserCartQuery } from "@/redux/features/user/userApi";
 
 type Props = {
   selectSearchType: string;
-  searchValue: string;
+  // searchValue: string;
   products: any;
   isLoading: boolean;
   framesProduct: any;
@@ -25,7 +26,7 @@ type Props = {
 
 const CarsCards: React.FC<Props> = ({
   selectSearchType,
-  searchValue,
+  // searchValue,
   products,
   isLoading,
   framesProduct,
@@ -77,12 +78,17 @@ const CarsCards: React.FC<Props> = ({
     }
   };
 
+  const { refetch: refetchCart } = useUserCartQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
+
   const [addToCart, { isSuccess: addToCartSuccess, error: addToCartError }] =
     useAddToCartMutation({});
 
   useEffect(() => {
     if (addToCartSuccess) {
-      // refetchCart();
+      refetchCart();
       toast.success(`Added to Cart`);
     }
     if (addToCartError) {
@@ -91,7 +97,7 @@ const CarsCards: React.FC<Props> = ({
         toast.error(errorMessage.data.message);
       }
     }
-  }, [addToCartSuccess, addToCartError]);
+  }, [addToCartSuccess, addToCartError, refetchCart]);
 
   const [imageError, setImageError] = useState(false);
   const handleImageError = () => {

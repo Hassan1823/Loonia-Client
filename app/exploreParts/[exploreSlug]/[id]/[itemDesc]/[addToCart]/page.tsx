@@ -3,17 +3,15 @@
 import Header from "@/app/components/Header";
 import Loader from "@/app/components/Loader";
 import Heading from "@/app/utils/Heading";
+import dummyImage from "@/public/dummy.webp";
 import {
-  useCreateOrderMutation,
-  useAddToCartMutation,
+  useAddToCartMutation
 } from "@/redux/features/order/orderApi";
 import { useGetSingleProductQuery } from "@/redux/features/products/productApi";
 import { useUserCartQuery } from "@/redux/features/user/userApi";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import dummyImage from "@/public/dummy.webp";
 
 type Props = {};
 
@@ -36,9 +34,7 @@ const Page = ({ params }: any) => {
   const exploreSlug = decodeURIComponent(
     schema.exploreSlug.replaceAll("%20", " ").trim()
   );
-  // console.log(`Item : `);
-  // console.log(item);
-  const pathname = usePathname();
+ 
 
   const { isSuccess, isLoading, data } = useGetSingleProductQuery(id);
   useEffect(() => {
@@ -98,24 +94,6 @@ const Page = ({ params }: any) => {
   }, [addToCartSuccess, addToCartError, refetchCart]);
   // ~------------------
 
-  //! create order starts here
-  // const [createOrder, { data: orderData, error, isSuccess: orderSuccess }] =
-  //   useCreateOrderMutation();
-
-  // useEffect(() => {
-  //   if (orderSuccess) {
-  //     console.log(`Order Created Successfully `);
-  //     toast.success(`Order Created Successfully `);
-  //     refetchCart();
-  //   }
-  //   if (error) {
-  //     if ("data" in error) {
-  //       const errorMessage = error as any;
-  //       toast.error(errorMessage.data.message);
-  //     }
-  //   }
-  // }, [orderSuccess, error, refetchCart]);
-  //! create order ends here
 
   const hrefNamesArray = (itemDesc as any).hrefNames
     ? (itemDesc as any).hrefNames

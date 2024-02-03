@@ -81,7 +81,6 @@ export const productApi = apiSlice.injectEndpoints({
       query: ({ href_number }) => ({
         url: `/products-by-hrefNumber`,
         method: "GET",
-        body: { href_number },
         credentials: "include" as const,
       }),
     }),

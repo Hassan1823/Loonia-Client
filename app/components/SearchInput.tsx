@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  // useGetAllProductsQuery,
-  useGetMainTypeProductsQuery,
-  useGetProductsByChassisQuery,
-  useGetProductsByPartNumberQuery,
-} from "@/redux/features/products/productApi";
+import { useGetMainTypeProductsQuery } from "@/redux/features/products/productApi";
 import { useEffect, useState } from "react";
 import CarsCards from "./CarsCards";
-import toast from "react-hot-toast";
 
 type PartsType = {
   partName: string;
@@ -37,89 +31,54 @@ const partsInitialState: PartsType = {
 function SearchInput() {
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
   const [selectSearchType, setSelectSearchType] = useState("Categories");
-  const [searchValue, setSearchValue] = useState("");
   const [products, setProducts] = useState([]);
 
   const [framesProduct, setFramesProduct] = useState([]);
-  const [partsProduct, setPartsProduct] = useState([]);
-  const [partsIndex, setPartsIndex] = useState(0);
+
   const [isLoading, setIsLoading] = useState(true);
-  const [chassisValue, setChassisValue] = useState(searchValue);
+  const [chassisValue, setChassisValue] = useState("");
 
   const [prev, setPrev] = useState(0);
   const [current, setCurrent] = useState(10);
   const [totalLength, setTotalLength] = useState<number>(0);
 
+  const [partsValue, setPartsValue] = useState("");
   const [partState, setPartState] = useState<PartsType>(partsInitialState);
 
   // ! search by parts number starts here
 
-  const {
-    data: partsData,
-    isError: partsError,
-    refetch: partsRefetch,
-  } = useGetProductsByPartNumberQuery({ href_number: searchValue });
-
-  useEffect(() => {
-    if (selectSearchType === "Parts" && searchValue !== "") {
-      if (partsData) {
-        setIsLoading(false);
-        // setPartsProduct(partsData.resultProducts);
-        console.log(`Parts Products are:`);
+  const handlePartsSearch = async () => {
+    if (partsValue === "") {
+      return;
+    } else {
+      console.log("Parts Values is : ", partsValue);
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+      const apiUrl = `${baseUrl}/products-by-hrefNumber/${partsValue}`;
+      try {
+        setIsLoading(true);
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log(data.product);
 
         setPartState({
           ...partState,
-          partName: partsData.resultProducts.partName,
-          frames: partsData.resultProducts.partName,
-          h1Tag: partsData.resultProducts.productName,
-          image: partsData.resultProducts.productImage,
-          partNumber: partsData.resultProducts.partNumber,
-          partPrice: partsData.resultProducts.partPrice,
-          subcategory: partsData.resultProducts.mainTitle,
-          title: partsData.resultProducts.mainCategory,
-          productId: partsData.resultProducts.productId,
+          partName: data.product.partName,
+          frames: data.product.frame,
+          h1Tag: data.product.mainTitle,
+          image: data.product.productImage,
+          partNumber: data.product.partNumber,
+          partPrice: data.product.partPrice,
+          productId: data.product.productId,
+          subcategory: data.product.car,
+          title: data.product.title,
         });
-        console.log(partState);
-      } else {
-        setIsLoading(true);
-      }
-      if (partsError) {
-        console.log(`Getting Error in Parts Search`);
+
+        setIsLoading(false);
+      } catch (error) {
+        return;
       }
     }
-  }, [
-    partsData,
-    partsError,
-    // selectSearchType,
-    // partState,
-  ]);
-
-  useEffect(() => {
-    const handlePartsRefetch = async () => {
-      setIsLoading(true);
-      console.log(`Refetching parts ...`);
-      await partsRefetch();
-      setIsLoading(false);
-      console.log(`Refetching parts Complete`);
-    };
-
-    if (partState.partName !== "" && selectSearchType === "Parts Number") {
-      setPartState({
-        ...partState,
-        partName: "",
-        frames: "",
-        h1Tag: "",
-        image: "",
-        partNumber: "",
-        partPrice: "",
-        subcategory: "",
-        title: "",
-        productId: "",
-      });
-
-      handlePartsRefetch();
-    }
-  }, [searchValue]);
+  };
 
   // ! search by parts number ends here
 
@@ -127,62 +86,26 @@ function SearchInput() {
 
   // ! search chassis starts here
 
-  const chassisResult = useGetProductsByChassisQuery({
-    frames: chassisValue,
-  });
-  const {
-    data: chassisData,
-    isError: chassisError,
-    refetch: chassisRefetch,
-  } = chassisResult;
+  const handleChassisSearch = async () => {
+    if (chassisValue === "") {
+      return;
+    } else {
+      console.log(chassisValue);
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+      const apiUrl = `${baseUrl}/products-by-frames/${chassisValue}`;
 
-  // console.log(`Search Input Value is :`);
-  // console.log(searchValue);
-
-  useEffect(() => {
-    setChassisValue(searchValue);
-
-    const inputArray = chassisValue.split("");
-    console.log(`input array is`);
-    console.log(inputArray);
-
-    setFramesProduct([]);
-    if (selectSearchType === "Chassis" && inputArray.length >= 3) {
-      if (inputArray.length === 0) {
-        toast.error("Please Enter Some Value ...");
-      }
-      console.log(`hitting chassis api`);
-      if (chassisData) {
-        setFramesProduct(chassisData.resultProduct);
-        console.log("Chassis data:");
-        console.log(chassisData);
-        setIsLoading(false);
-      } else {
+      try {
         setIsLoading(true);
-      }
-
-      if (chassisError) {
-        console.log(`Chassis Search Error`);
-      }
-    }
-  }, [chassisData, chassisError, selectSearchType, searchValue, chassisValue]);
-
-  useEffect(() => {
-    const refetchChassis = async () => {
-      setIsLoading(true);
-      console.log(`Refetching Chassis ...`);
-      await chassisRefetch();
-      setIsLoading(false);
-      console.log(`Refetching Chassis Complete`);
-    };
-
-    if (selectSearchType === "Chassis") {
-      if (framesProduct.length !== 0) {
-        // setChassisValue("");
-        refetchChassis();
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log(data.resultProduct);
+        setFramesProduct(data.resultProduct);
+        setIsLoading(false);
+      } catch (error) {
+        return;
       }
     }
-  }, [chassisValue]);
+  };
 
   // ! search chassis ends here
 
@@ -222,18 +145,6 @@ function SearchInput() {
     }
   }, [data, isError]);
 
-  // useEffect(() => {
-
-  //   // const fetchData = async () => {
-  //   // setIsLoading(true);
-  //   // console.log(`Loading ...`);
-  //   // setIsLoading(false);
-  //   // console.log(`Loading Complete`);
-  //   // };
-
-  //   // fetchData();
-  // }, [selectManufacture, current, prev, refetch]);
-
   // ! search by main types ends here
 
   // handle manufacturer
@@ -253,12 +164,6 @@ function SearchInput() {
   // handle search type
   const handleYearChange = (e: any) => {
     setSelectSearchType(e.target.value); // Update the selectedYears state with the selected option
-  };
-  // handle input search Value
-  const handleSetSearchValue = (e: any) => {
-    let valueSearch = e.target.value;
-    let value = valueSearch;
-    setSearchValue(value); // Update the selectedYears state with the selected option
   };
 
   // ! handle load more function
@@ -303,13 +208,10 @@ function SearchInput() {
                     type="text"
                     placeholder="S51"
                     className="p-2 outline-none bg-transparent text-white placeholder:text-white w-full max-w-xs text-base"
-                    value={searchValue}
-                    onChange={handleSetSearchValue}
+                    value={chassisValue}
+                    onChange={(e) => setChassisValue(e.target.value)}
                   />
-                  <button
-                    //  onClick={handleChassisSearch}
-                    className="pr-4"
-                  >
+                  <button onClick={handleChassisSearch} className="pr-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -330,13 +232,10 @@ function SearchInput() {
                     type="text"
                     placeholder="08911-1062G"
                     className="sm:p-0 p-2 outline-none bg-transparent text-white placeholder:text-white w-full max-w-xs text-[15px]"
-                    value={searchValue}
-                    onChange={handleSetSearchValue}
+                    value={partsValue}
+                    onChange={(e) => setPartsValue(e.target.value)}
                   />
-                  <button
-                    // onClick={handlePartsSearch}
-                    className="pr-4"
-                  >
+                  <button onClick={handlePartsSearch} className="pr-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -389,7 +288,6 @@ function SearchInput() {
 
       <CarsCards
         selectSearchType={selectSearchType}
-        searchValue={searchValue}
         isLoading={isLoading}
         products={products}
         framesProduct={framesProduct}
