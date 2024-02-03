@@ -39,47 +39,11 @@ export const productApi = apiSlice.injectEndpoints({
         body: { productId, payment_info },
       }),
     }),
-    //~ get api by main type
-    // getProductsByMainTypes: builder.mutation({
-    //   query: ({ type }) => ({
-    //     url: `products-by-type?type=${type}`,
-    //     method: "GET",
-    //     credentials: "include" as const,
-    //   }),
-    // }),
-
-    // // ~ get cars by frame number
-    // getProductByFrames: builder.query({
-    //   query: (frames) => ({
-    //     url: "products-by-frames",
-    //     method: "GET",
-    //     credentials: "include" as const,
-    //   }),
-    // }),
 
     // ! get main type products
     getMainTypeProducts: builder.query({
       query: ({ type, prevLimit, limit }) => ({
         url: `/main-type-products/${type}/${prevLimit}/${limit}`,
-        method: "GET",
-        credentials: "include" as const,
-      }),
-    }),
-
-    // ! get products by frame number or chassis
-
-    getProductsByChassis: builder.query({
-      query: ({ frames }) => ({
-        url: `/products-by-frames/${frames}`,
-        method: "GET",
-        credentials: "include" as const,
-      }),
-    }),
-
-    // ! get products by parts number
-    getProductsByPartNumber: builder.query({
-      query: ({ href_number }) => ({
-        url: `/products-by-hrefNumber`,
         method: "GET",
         credentials: "include" as const,
       }),
@@ -93,8 +57,5 @@ export const {
   useGetSingleProductQuery,
   useGetSubCategoriesProductsQuery,
   useGetProductCardsQuery,
-  // useGetProductsByMainTypesMutation,
   useGetMainTypeProductsQuery,
-  useGetProductsByChassisQuery,
-  useGetProductsByPartNumberQuery,
 } = productApi;
