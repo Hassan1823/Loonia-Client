@@ -42,8 +42,8 @@ export const productApi = apiSlice.injectEndpoints({
 
     // ! get main type products
     getMainTypeProducts: builder.query({
-      query: ({ type, prevLimit, limit }) => ({
-        url: `/main-type-products/${type}/${prevLimit}/${limit}`,
+      query: ({ type, limit, page }) => ({
+        url: `/main-type-products/${type}/${limit}/${page}`,
         method: "GET",
         credentials: "include" as const,
       }),

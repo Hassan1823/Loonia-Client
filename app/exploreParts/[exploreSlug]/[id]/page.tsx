@@ -37,6 +37,11 @@ const Page = ({ params }: any) => {
 
   const id = params?.id;
   const { isSuccess, isLoading, data } = useGetSingleProductQuery(id);
+
+  if (data) {
+    console.log("product data is ");
+    console.log(data);
+  }
   const [family, setFamily] = useState("");
 
   const pathname: any = usePathname();

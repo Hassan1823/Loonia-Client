@@ -37,6 +37,8 @@ const CarsCards: React.FC<Props> = ({
   prev,
   current,
 }) => {
+  console.log("Product length is :", productsLength);
+
   // ! image loader
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -352,12 +354,12 @@ const CarsCards: React.FC<Props> = ({
           <div className="w-full h-auto flex justify-center gap-1">
             {productsLength > 10 && (
               <button
-                disabled={prev <= 0}
+                disabled={prev <= 1}
                 onClick={handleLoadPrev}
                 className={`p-2 mt-5 bg-yellow-500 text-white
         px-4 rounded-s-full 
         hover:scale-105 transition-all my-8 ${
-          prev <= 0 && "cursor-not-allowed"
+          prev <= 1 && "cursor-not-allowed"
         }`}
               >
                 Prev

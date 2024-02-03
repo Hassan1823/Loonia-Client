@@ -38,12 +38,15 @@ function SearchInput() {
   const [isLoading, setIsLoading] = useState(true);
   const [chassisValue, setChassisValue] = useState("");
 
-  const [prev, setPrev] = useState(0);
+  const [prev, setPrev] = useState(1);
   const [current, setCurrent] = useState(10);
   const [totalLength, setTotalLength] = useState<number>(0);
 
   const [partsValue, setPartsValue] = useState("");
   const [partState, setPartState] = useState<PartsType>(partsInitialState);
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   // ! search by parts number starts here
 
@@ -119,8 +122,8 @@ function SearchInput() {
   } = useGetMainTypeProductsQuery(
     {
       type: selectManufacture,
-      prevLimit: prev,
-      limit: current,
+      limit: limit,
+      page: page,
     },
     { refetchOnMountOrArgChange: true }
   );
@@ -134,8 +137,8 @@ function SearchInput() {
     }
     if (data) {
       setProducts(data.products);
-      setTotalLength(data.length);
-      console.log("Length is ", totalLength);
+      setTotalLength(data.totalLength);
+      console.log("Length is ", data.totalLength);
 
       setIsLoading(false);
     }
@@ -155,9 +158,9 @@ function SearchInput() {
 
   const handleMainRefetch = () => {
     setIsLoading(true);
-    setPrev(0);
-    setCurrent(10);
-    console.log(`handling refetch ${prev} and ${current}`);
+    setLimit(10);
+    setPage(1);
+    console.log(`handling refetch ${page} and ${limit}`);
     // refetch();
   };
 
@@ -169,12 +172,13 @@ function SearchInput() {
   // ! handle load more function
   const handleLoadMore = () => {
     setIsLoading(true);
-    console.log(`Loading More `);
-    setPrev(current);
-    console.log(`prev :`, prev);
-    const curr = current + 10;
-    setCurrent(curr);
-    console.log(`current :`, current);
+    console.log(`Loading Prev `);
+    const pre = page + 1;
+    setPage(pre);
+    console.log(`prev :`, page);
+    const curr = limit + 10;
+    setLimit(curr);
+    console.log(`current :`, limit);
 
     // refetch();
   };
@@ -182,12 +186,12 @@ function SearchInput() {
   const handleLoadPrev = () => {
     setIsLoading(true);
     console.log(`Loading Prev `);
-    const pre = prev - 10;
-    console.log(`prev :`, pre);
-    setPrev(pre);
-    const curr = current - 10;
-    setCurrent(curr);
-    console.log(`current :`, current);
+    const pre = page - 1;
+    setPage(pre);
+    console.log(`prev :`, page);
+    const curr = limit - 10;
+    setLimit(curr);
+    console.log(`current :`, limit);
 
     // refetch();
   };
@@ -295,8 +299,8 @@ function SearchInput() {
         productsLength={totalLength}
         handleLoadMore={handleLoadMore}
         handleLoadPrev={handleLoadPrev}
-        prev={prev}
-        current={current}
+        prev={page}
+        current={limit}
       />
     </div>
   );
