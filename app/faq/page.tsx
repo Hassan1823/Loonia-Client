@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Heading from "../utils/Heading";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 type Props = {};
 
@@ -33,6 +34,8 @@ const Page = (props: Props) => {
           {`You may submit your order using either the specific part number or the Vehicle Identification Number (VIN) of your Japanese car. Rest assured, we will dispatch the authentic parts accordingly.`}
         </p>
       </div>
+
+      <Footer />
     </div>
   );
 };

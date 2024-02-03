@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Heading from "../utils/Heading";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 type Props = {};
 
@@ -33,6 +34,8 @@ const Page = (props: Props) => {
           {`Feel free to reach out with any inquiries. If you're having trouble or unsure about a specific part number, you can provide a description of the part, and our team will assist you in finding the exact match.`}
         </p>
       </div>
+
+      <Footer />
     </div>
   );
 };
