@@ -37,8 +37,6 @@ const CarsCards: React.FC<Props> = ({
   prev,
   current,
 }) => {
-  console.log("Product length is :", productsLength);
-
   // ! image loader
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -55,12 +53,12 @@ const CarsCards: React.FC<Props> = ({
   //   setProductLimit((prevLimit) => prevLimit + 10);
   // };
 
-  useEffect(() => {
-    console.log(
-      framesProduct.length !== 0 ? framesProduct : "no data for frames"
-    );
-    console.log(partState && partState);
-  }, [framesProduct, partState]);
+  // useEffect(() => {
+  //   console.log(
+  //     framesProduct.length !== 0 ? framesProduct : "no data for frames"
+  //   );
+  //   console.log(partState && partState);
+  // }, [framesProduct, partState]);
 
   // Calculate the 20% values before rendering
   const calculateTwentyPercent = (value: any) => {
@@ -119,9 +117,9 @@ const CarsCards: React.FC<Props> = ({
               <Loader />
             </>
           ) : framesProduct.length !== 0 ? (
-            <div className="w-full h-auto flex justify-center items-center py-10">
+            <div className="w-full h-auto flex flex-wrap justify-center items-center py-10 space-x-8">
               {framesProduct &&
-                framesProduct.slice(0, 1).map((data: any, index: number) => {
+                framesProduct.map((data: any, index: number) => {
                   // title
                   let pTitle = data.BreadcrumbsH1.trim();
                   let pTitleArray = pTitle.split(" ");
@@ -202,7 +200,7 @@ const CarsCards: React.FC<Props> = ({
                 <div className="">
                   <div className="w-full h-auto flex justify-center items-center my-5">
                     <Image
-                      src={imageError ? dummyImage : partState.image}
+                      src={!imageError ? partState.image : dummyImage}
                       alt={partState.title}
                       width={350}
                       height={200}
@@ -287,9 +285,13 @@ const CarsCards: React.FC<Props> = ({
               </div>
               {/* Table ends here */}
             </div>
+          ) : partState.title === "" ? (
+            <h1 className="w-full min-h-screen h-auto text-center mt-24">
+              please Enter some value
+            </h1>
           ) : (
             <h1 className="w-full min-h-screen h-auto text-center mt-24">
-              Please wait ...
+              Something went wrong
             </h1>
           )}
         </>

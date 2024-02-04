@@ -44,6 +44,7 @@ function SearchInput() {
 
   const [partsValue, setPartsValue] = useState("");
   const [partState, setPartState] = useState<PartsType>(partsInitialState);
+  const [partsData, setPartsData] = useState([]);
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -56,25 +57,30 @@ function SearchInput() {
     } else {
       console.log("Parts Values is : ", partsValue);
       const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-      const apiUrl = `${baseUrl}/products-by-hrefNumber/${partsValue}`;
+      const apiUrl = `${baseUrl}/products-by-hrefNumber/${partsValue}/${10}/${1}`;
       try {
         setIsLoading(true);
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(data.product);
+        setPartsData(data.product[0]);
+        // console.log("parts Data us ");
+        // console.log(partsData);
 
         setPartState({
           ...partState,
-          partName: data.product.partName,
-          frames: data.product.frame,
-          h1Tag: data.product.mainTitle,
-          image: data.product.productImage,
-          partNumber: data.product.partNumber,
-          partPrice: data.product.partPrice,
-          productId: data.product.productId,
-          subcategory: data.product.car,
-          title: data.product.title,
+          partName: data.product[0].partName,
+          frames: data.product[0].frame,
+          h1Tag: data.product[0].mainTitle,
+          image: data.product[0].productImage,
+          partNumber: data.product[0].partNumber,
+          partPrice: data.product[0].partPrice,
+          productId: data.product[0].productId,
+          subcategory: data.product[0].car,
+          title: data.product[0].title,
         });
+
+        // console.log("Parts Data is :");
+        // console.table(partState);
 
         setIsLoading(false);
       } catch (error) {
@@ -95,14 +101,14 @@ function SearchInput() {
     } else {
       console.log(chassisValue);
       const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-      const apiUrl = `${baseUrl}/products-by-frames/${chassisValue}`;
+      const apiUrl = `${baseUrl}/products-by-frames/${chassisValue}/${10}/${1}`;
 
       try {
         setIsLoading(true);
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(data.resultProduct);
-        setFramesProduct(data.resultProduct);
+        console.log(data.products);
+        setFramesProduct(data.products);
         setIsLoading(false);
       } catch (error) {
         return;
