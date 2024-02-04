@@ -8,6 +8,7 @@ import Link from "next/link";
 import Heading from "@/app/utils/Heading";
 import Header from "@/app/components/Header";
 import dummyImage from "@/public/dummy.webp";
+import Image from "next/image";
 
 type Props = {};
 
@@ -25,7 +26,8 @@ const Page: React.FC<Props> = ({ params }: any) => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(`Data is ${data.productNames}`);
+      console.log(`Data is :`);
+      console.log(data.products);
     } else {
       console.log(`No data found`);
     }
@@ -63,7 +65,7 @@ const Page: React.FC<Props> = ({ params }: any) => {
               <h1 className="lg:text-4xl text-2xl font-semibold text-yellow-500">
                 {`${category}`}
               </h1>
-              {data?.productNames.length === 0 ? (
+              {data?.products.length === 0 ? (
                 <h1 className="lg:text-2xl text-lg font-light text-gray-500 w-full min-h-screen">
                   {"No Data Found"}
                 </h1>
@@ -75,31 +77,29 @@ const Page: React.FC<Props> = ({ params }: any) => {
 
               {/* cards starts here*/}
               <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-4 md:gap-6 lg:gap-10">
-                {data.productNames.map((data: any, index: number) => {
+                {data.products.map((data: any, index: number) => {
+                  // const productFrames = data.product.Frames;
+
                   return (
                     <div key={index}>
-                      {/* {data.parentTitle === categ && ( */}
                       <Link
                         href={`${pathname}/${data._id}`}
                         passHref
                         // onClick={() => router.push(`${pathname}/${data.Frames}`)}
                         className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
                       >
-                        {/* {imageLoading ? (
-                          <span className="loading loading-infinity loading-md"></span>
-                        ) : ( */}
-                        <img
+                        <Image
                           src={imageError ? dummyImage : data.ImageLink}
                           alt={data.Frames}
-                          // width={150}
+                          width={220}
                           height={100}
                           onError={handleImageError}
-                          className=" object-contain rounded-md my-4 lg:w-56 md:w-44 w-36 border"
+                          className=" object-contain rounded-md my-4 border"
                         />
                         {/* // )} */}
 
-                        <span className="text-yellow-500 hover:text-white">
-                          {data.Family}
+                        <span className="text-yellow-500 hover:text-white text-md">
+                          {`${data.category} ${data.subcategory}`}
                         </span>
                         <span className="text-white hover:text-yellow-500">
                           {data.Years}
@@ -107,7 +107,7 @@ const Page: React.FC<Props> = ({ params }: any) => {
                         {/* <span className="truncate">{data.Frames}</span> */}
                         {/* <span className="text-white hover:text-yellow-500 mx-auto text-center">{data.Frames}</span> */}
                         <span className="text-white hover:text-yellow-500">
-                          {data.Generation}
+                          {`(${data.Frames.split(",")[0].trim()})`}
                         </span>
                       </Link>
                       {/* )} */}

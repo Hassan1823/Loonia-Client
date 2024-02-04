@@ -26,7 +26,7 @@ export const productApi = apiSlice.injectEndpoints({
     }),
     getSubCategoriesProducts: builder.query({
       query: (id) => ({
-        url: `products-by-sub/${id}`,
+        url: `products-by-sub/${id}/${10}/${1}`,
         method: "GET",
         credentials: "include" as const,
       }),

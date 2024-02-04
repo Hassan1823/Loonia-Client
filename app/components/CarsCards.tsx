@@ -47,20 +47,6 @@ const CarsCards: React.FC<Props> = ({
 
   const [productLimit, setProductLimit] = useState(10);
 
-  // existing code...
-
-  // const handleLoadMore = () => {
-  //   setProductLimit((prevLimit) => prevLimit + 10);
-  // };
-
-  // useEffect(() => {
-  //   console.log(
-  //     framesProduct.length !== 0 ? framesProduct : "no data for frames"
-  //   );
-  //   console.log(partState && partState);
-  // }, [framesProduct, partState]);
-
-  // Calculate the 20% values before rendering
   const calculateTwentyPercent = (value: any) => {
     const floatValue = parseFloat(value.replace(/,/g, ""));
     if (isNaN(floatValue)) {
@@ -302,47 +288,45 @@ const CarsCards: React.FC<Props> = ({
               <Loader />
             </>
           ) : !isLoading && products.length !== 0 ? (
-            <div className="w-full h-auto flex flex-wrap justify-center items-center gap-4 md:gap-6 py-10">
-              {products
-                .slice(0, productLimit)
-                .map((data: any, index: number) => {
-                  // title
-                  let pTitle = data.BreadcrumbsH1.trim();
-                  let pTitleArray = pTitle.split(" ");
-                  pTitle = pTitleArray[0] + " " + pTitleArray[1];
+            <div className="w-full h-auto grid place-items-center place-content-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-4 md:gap-6 p-12">
+              {products.map((data: any, index: number) => {
+                // title
+                let pTitle = data.BreadcrumbsH1.trim();
+                let pTitleArray = pTitle.split(" ");
+                pTitle = pTitleArray[0] + " " + pTitleArray[1];
 
-                  // family
-                  let family = data.Frames.trim();
-                  let familyArray = family.split(", ");
-                  family = familyArray[0];
-                  return (
-                    <div className="" key={index}>
-                      <Link
-                        href={`/exploreParts/${pTitle}/${data._id}`}
-                        passHref
-                        className="w-64 h-auto rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
-                      >
-                        <Image
-                          src={imageError ? dummyImage : data.ImageLink}
-                          alt={family}
-                          width={220}
-                          height={100}
-                          onError={handleImageError}
-                          className="object-contain rounded-md my-4 border"
-                        />
-                        <span className="text-yellow-500 hover:text-white">
-                          {data.ParentTitle ? data.ParentTitle : pTitle}
-                        </span>
-                        <span className="text-white hover:text-yellow-500">
-                          {`(${family})`}
-                        </span>
-                        <span className="text-white hover:text-yellow-500">
-                          {data.Years}
-                        </span>
-                      </Link>
-                    </div>
-                  );
-                })}
+                // family
+                let family = data.Frames.trim();
+                let familyArray = family.split(", ");
+                family = familyArray[0];
+                return (
+                  <div className="" key={index}>
+                    <Link
+                      href={`/exploreParts/${pTitle}/${data._id}`}
+                      passHref
+                      className="w-64 h-auto rounded-md hover:shadow-xl flex flex-col justify-center items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-pointer"
+                    >
+                      <Image
+                        src={imageError ? dummyImage : data.ImageLink}
+                        alt={family}
+                        width={220}
+                        height={100}
+                        onError={handleImageError}
+                        className="object-contain rounded-md my-4 border"
+                      />
+                      <span className="text-yellow-500 hover:text-white">
+                        {data.ParentTitle ? data.ParentTitle : pTitle}
+                      </span>
+                      <span className="text-white hover:text-yellow-500">
+                        {`(${family})`}
+                      </span>
+                      <span className="text-white hover:text-yellow-500">
+                        {data.Years}
+                      </span>
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <>
@@ -369,7 +353,7 @@ const CarsCards: React.FC<Props> = ({
             )}
             {productsLength > 12 && (
               <button
-                disabled={current >= productsLength}
+                disabled={current >= productsLength }
                 onClick={handleLoadMore}
                 className={`p-2 mt-5 bg-yellow-500 text-white
         px-4  rounded-e-full
