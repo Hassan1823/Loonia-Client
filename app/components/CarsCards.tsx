@@ -16,12 +16,17 @@ type Props = {
   products: any;
   isLoading: boolean;
   framesProduct: any;
-  partState: any;
   productsLength: number;
   handleLoadMore: () => void;
   handleLoadPrev: () => void;
   prev: number;
   current: number;
+  partsTest: any;
+  handleTableNext: () => void;
+  handleTablePrev: () => void;
+  totalTablePages: number;
+  tablePage: number;
+  tableLimit: number;
 };
 
 const CarsCards: React.FC<Props> = ({
@@ -30,13 +35,21 @@ const CarsCards: React.FC<Props> = ({
   products,
   isLoading,
   framesProduct,
-  partState,
   productsLength,
   handleLoadMore,
   handleLoadPrev,
   prev,
   current,
+  partsTest,
+  handleTableNext,
+  handleTablePrev,
+  totalTablePages,
+  tableLimit,
+  tablePage,
 }) => {
+  console.log("parts Data us ");
+  console.table(partsTest);
+
   // ! image loader
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -103,7 +116,7 @@ const CarsCards: React.FC<Props> = ({
               <Loader />
             </>
           ) : framesProduct.length !== 0 ? (
-            <div className="w-full h-auto flex flex-wrap justify-center items-center py-10 space-x-8">
+            <div className="w-full h-auto grid place-items-center place-content-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-4 md:gap-6 p-12">
               {framesProduct &&
                 framesProduct.map((data: any, index: number) => {
                   // title
@@ -166,37 +179,10 @@ const CarsCards: React.FC<Props> = ({
         </>
       ) : selectSearchType === "Parts" ? (
         <>
-          {isLoading && partState.title === "" ? (
+          {isLoading ? (
             <Loader />
-          ) : !isLoading && partState.title !== "" ? (
+          ) : !isLoading && partsTest.length !== 0 ? (
             <div className="w-full min-h-screen h-auto mt-12">
-              <h1 className="text-3xl font-bold text-yellow-500 text-center my-5">
-                Choose Your favourite Part
-              </h1>
-              <div className="w-full h-auto flex flex-wrap justify-evenly items-center p-4 gap-4">
-                <div className="flex flex-col gap-1 w-1/2">
-                  <h1 className="text-2xl font-bold text-yellow-500">
-                    Details :
-                  </h1>
-                  {/* <h1>{partState.subcategory}</h1> */}
-                  <h1>{partState.title}</h1>
-                  <h1>{partState.frames}</h1>
-                  <h1>{partState.h1Tag}</h1>
-                </div>
-                <div className="">
-                  <div className="w-full h-auto flex justify-center items-center my-5">
-                    <Image
-                      src={!imageError ? partState.image : dummyImage}
-                      alt={partState.title}
-                      width={350}
-                      height={200}
-                      onError={handleImageError}
-                      className="object-contain rounded-lg"
-                    />
-                  </div>
-                </div>
-              </div>
-
               {/* Table starts here */}
               <div className="overflow-x-auto border p-4 rounded-lg mt-10">
                 <table className="table">
@@ -210,7 +196,71 @@ const CarsCards: React.FC<Props> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
+                    {partsTest.map((part: any, index: number) => {
+                      return (
+                        // <div >
+                        <tr
+                          key={index}
+                          className={
+                            part.partName === "Not available" ||
+                            part.partName === "Out of stock" ||
+                            part.partName === "Discontinued" ||
+                            part.partPrice === "Discontinued" ||
+                            part.partName === "-"
+                              ? "cursor-not-allowed w-1/5 px-4 py-2 text-center bg-slate-700 hover:scale-[103%] duration-200"
+                              : "hover hover:duration-300 cursor-pointer w-1/5 px-4 py-2 text-center hover:scale-[103%] duration-200"
+                          }
+                        >
+                          <th>{index + 1}</th>
+                          <td>{part.partName}</td>
+                          <td>{part.partNumber}</td>
+                          <td>
+                            {part.partName !== "Discontinued" &&
+                            part.partName !== "Not available" &&
+                            part.partName !== "Out of stock"
+                              ? calculateTwentyPercent(part.partPrice)
+                              : part.partPrice}
+                          </td>
+                          <td>
+                            {part.partName !== "Discontinued" &&
+                              part.partName !== "Not available" &&
+                              part.partName !== "Out of stock" &&
+                              part.partName !== "-" && (
+                                <button
+                                  className="bg-yellow-500 text-white rounded-md p-2 hover:scale-110 hover:duration-200 "
+                                  onClick={() =>
+                                    addToCart({
+                                      productId: part.productId,
+                                      hrefNumbers: part.partNumber,
+                                      hrefNames: part.partName,
+                                      hrefPrices: calculateTwentyPercent(
+                                        part.partPrice
+                                      ),
+                                    })
+                                  }
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                                    />
+                                  </svg>
+                                </button>
+                              )}
+                          </td>
+                        </tr>
+                        // </div>
+                      );
+                    })}
+                    {/* <tr
                       className={
                         partState.partName === "Not available" ||
                         partState.partName === "Out of stock" ||
@@ -265,13 +315,42 @@ const CarsCards: React.FC<Props> = ({
                             </button>
                           )}
                       </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
+                <div className="w-full h-auto flex justify-center gap-1">
+                  {totalTablePages >= 1 && (
+                    <button
+                      disabled={tablePage <= 1}
+                      onClick={handleTablePrev}
+                      className={`p-2 mt-5 bg-yellow-500 text-white
+                    px-4  rounded-s-full
+                    hover:scale-105 transition-all my-8 ${
+                      tablePage <= 1 && "cursor-not-allowed"
+                    }`}
+                    >
+                      Prev
+                    </button>
+                  )}
+
+                  {tablePage <= totalTablePages && (
+                    <button
+                      disabled={tablePage >= totalTablePages}
+                      onClick={handleTableNext}
+                      className={`p-2 mt-5 bg-yellow-500 text-white
+          px-4  rounded-e-full
+          hover:scale-105 transition-all my-8 ${
+            tablePage >= totalTablePages && "cursor-not-allowed"
+          }`}
+                    >
+                      Next
+                    </button>
+                  )}
+                </div>
               </div>
               {/* Table ends here */}
             </div>
-          ) : partState.title === "" ? (
+          ) : partsTest.length === 0 ? (
             <h1 className="w-full min-h-screen h-auto text-center mt-24">
               please Enter some value
             </h1>
@@ -353,7 +432,7 @@ const CarsCards: React.FC<Props> = ({
             )}
             {productsLength > 12 && (
               <button
-                disabled={current >= productsLength }
+                disabled={current >= productsLength}
                 onClick={handleLoadMore}
                 className={`p-2 mt-5 bg-yellow-500 text-white
         px-4  rounded-e-full

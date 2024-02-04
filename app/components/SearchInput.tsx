@@ -4,30 +4,6 @@ import { useGetMainTypeProductsQuery } from "@/redux/features/products/productAp
 import { useEffect, useState } from "react";
 import CarsCards from "./CarsCards";
 
-type PartsType = {
-  partName: string;
-  partPrice: string;
-  partNumber: string;
-  image: string;
-  frames: string;
-  h1Tag: string;
-  subcategory: string;
-  title: string;
-  productId: string;
-};
-
-const partsInitialState: PartsType = {
-  partName: "",
-  partPrice: "",
-  partNumber: "",
-  image: "",
-  frames: "",
-  h1Tag: "",
-  subcategory: "",
-  title: "",
-  productId: "",
-};
-
 function SearchInput() {
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
   const [selectSearchType, setSelectSearchType] = useState("Categories");
@@ -41,11 +17,15 @@ function SearchInput() {
   const [totalLength, setTotalLength] = useState<number>(0);
 
   const [partsValue, setPartsValue] = useState("");
-  const [partState, setPartState] = useState<PartsType>(partsInitialState);
-  const [partsData, setPartsData] = useState([]);
+
+  const [partsTest, setPartsTest] = useState([]);
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
+
+  const [tablePage, setTablePage] = useState(1);
+  const [tableLimit, setTableLimit] = useState(10);
+  const [tableTotalPages, setTableTotalPages] = useState(0);
 
   // ! search by parts number starts here
 
@@ -55,30 +35,14 @@ function SearchInput() {
     } else {
       console.log("Parts Values is : ", partsValue);
       const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-      const apiUrl = `${baseUrl}/products-by-hrefNumber/${partsValue}/${10}/${1}`;
+      const apiUrl = `${baseUrl}/products-by-hrefNumber/${partsValue}/${tableLimit}/${tablePage}`;
       try {
         setIsLoading(true);
         const response = await fetch(apiUrl);
         const data = await response.json();
-        setPartsData(data.product[0]);
-        // console.log("parts Data us ");
-        // console.log(partsData);
 
-        setPartState({
-          ...partState,
-          partName: data.product[0].partName,
-          frames: data.product[0].frame,
-          h1Tag: data.product[0].mainTitle,
-          image: data.product[0].productImage,
-          partNumber: data.product[0].partNumber,
-          partPrice: data.product[0].partPrice,
-          productId: data.product[0].productId,
-          subcategory: data.product[0].car,
-          title: data.product[0].title,
-        });
-
-        // console.log("Parts Data is :");
-        // console.table(partState);
+        setPartsTest(data.product);
+        setTableTotalPages(data.totalPages);
 
         setIsLoading(false);
       } catch (error) {
@@ -87,6 +51,33 @@ function SearchInput() {
     }
   };
 
+  const handleTableNext = () => {
+    setIsLoading(true);
+
+    const page = tablePage + 1;
+    setTablePage(page);
+
+    const limit = tableLimit + 10;
+    setTableLimit(limit);
+  };
+  const handleTablePrev = () => {
+    setIsLoading(true);
+
+    const page = tablePage - 1;
+    setTablePage(page);
+
+    const limit = tableLimit - 10;
+    setTableLimit(limit);
+  };
+
+  useEffect(() => {
+    // Ensure we don't call handlePartsSearch() with invalid page or limit values
+    if (tablePage > 0 && tableLimit > 0) {
+      console.log("table page : ", tablePage);
+      console.log("table limit : ", tableLimit);
+      handlePartsSearch();
+    }
+  }, [tablePage, tableLimit]);
   // ! search by parts number ends here
 
   // ~----------------------------------
@@ -101,6 +92,7 @@ function SearchInput() {
       const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
       const apiUrl = `${baseUrl}/products-by-frames/${chassisValue}/${10}/${1}`;
 
+      setFramesProduct([]);
       try {
         setIsLoading(true);
         const response = await fetch(apiUrl);
@@ -299,12 +291,17 @@ function SearchInput() {
         isLoading={isLoading}
         products={products}
         framesProduct={framesProduct}
-        partState={partState}
         productsLength={totalLength}
         handleLoadMore={handleLoadMore}
         handleLoadPrev={handleLoadPrev}
         prev={page}
         current={limit}
+        partsTest={partsTest}
+        handleTableNext={handleTableNext}
+        handleTablePrev={handleTablePrev}
+        totalTablePages={tableTotalPages}
+        tablePage={tablePage}
+        tableLimit={tableLimit}
       />
     </div>
   );

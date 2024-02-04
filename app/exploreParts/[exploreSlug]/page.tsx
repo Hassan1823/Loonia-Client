@@ -76,7 +76,7 @@ const Page: React.FC<Props> = ({ params }: any) => {
               )}
 
               {/* cards starts here*/}
-              <div className="w-full h-auto grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-2 place-items-center gap-4 md:gap-6 lg:gap-10">
+              <div className="w-full h-auto grid place-items-center place-content-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-4 md:gap-6 p-12">
                 {data.products.map((data: any, index: number) => {
                   // const productFrames = data.product.Frames;
 

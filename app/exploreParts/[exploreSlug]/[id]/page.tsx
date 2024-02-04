@@ -8,24 +8,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import dummyImage from "@/public/dummy.webp";
+// import group1 from "@/public/group_1.png";
 
 type Props = {};
 
 const partsGroup = [
   {
-    src: "https://www.amayama.com/i/catalogs/group_1.png",
+    src: `/group_1.png`,
     desc: " Engine , fuel system and tools ",
   },
   {
-    src: "https://www.amayama.com/i/catalogs/group_3.png",
-    desc: " Body and interior ",
-  },
-  {
-    src: "https://www.amayama.com/i/catalogs/group_2.png",
+    src: "/group_2.png",
     desc: " Chassis and transmission ",
   },
   {
-    src: "https://www.amayama.com/i/catalogs/group_4.png",
+    src: "/group_3.png",
+    desc: " Body and interior ",
+  },
+  {
+    src: "/group_4.png",
     desc: " Electrics ",
   },
 ];
@@ -106,7 +107,7 @@ const Page = ({ params }: any) => {
             <>
               <div className="h-auto w-full flex flex-wrap justify-evenly gap-8 items-center">
                 <div className="w-48 h-60 rounded-md hover:shadow-xl flex flex-col justify-start items-center text-[0.75rem] text-[#A5A5A5] hover:cursor-not-allowed ">
-                  <img
+                  <Image
                     src={imageError ? dummyImage : data.product.ImageLink}
                     alt="cars"
                     width={180}
@@ -124,10 +125,7 @@ const Page = ({ params }: any) => {
                   {/* parts */}
                   <div className="w-full h-auto flex flex-wrap lg:justify-start justify-center gap-4 hover:cursor-pointer my-4">
                     {partsGroup?.map((item: any, index: number) => {
-                      let href =
-                        data.product.ListOfHrefs[index].H1Tag === undefined
-                          ? data.product.ListOfHrefs[index].h1Tag
-                          : data.product.ListOfHrefs[index].H1Tag;
+                      let href = data.product.ListOfHrefs[index].H1Tag;
 
                       return (
                         <Link
