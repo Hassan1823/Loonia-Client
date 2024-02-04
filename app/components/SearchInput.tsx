@@ -38,8 +38,6 @@ function SearchInput() {
   const [isLoading, setIsLoading] = useState(true);
   const [chassisValue, setChassisValue] = useState("");
 
-  const [prev, setPrev] = useState(1);
-  const [current, setCurrent] = useState(10);
   const [totalLength, setTotalLength] = useState<number>(0);
 
   const [partsValue, setPartsValue] = useState("");
@@ -47,7 +45,7 @@ function SearchInput() {
   const [partsData, setPartsData] = useState([]);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
 
   // ! search by parts number starts here
 
@@ -164,7 +162,7 @@ function SearchInput() {
 
   const handleMainRefetch = () => {
     setIsLoading(true);
-    setLimit(10);
+    setLimit(12);
     setPage(1);
     console.log(`handling refetch ${page} and ${limit}`);
     // refetch();
@@ -182,7 +180,7 @@ function SearchInput() {
     const pre = page + 1;
     setPage(pre);
     console.log(`prev :`, page);
-    const curr = limit + 10;
+    const curr = limit + 12;
     setLimit(curr);
     console.log(`current :`, limit);
 
@@ -195,7 +193,7 @@ function SearchInput() {
     const pre = page - 1;
     setPage(pre);
     console.log(`prev :`, page);
-    const curr = limit - 10;
+    const curr = limit - 12;
     setLimit(curr);
     console.log(`current :`, limit);
 

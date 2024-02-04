@@ -302,7 +302,7 @@ const CarsCards: React.FC<Props> = ({
               <Loader />
             </>
           ) : !isLoading && products.length !== 0 ? (
-            <div className="w-full h-auto grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 place-items-center gap-4 md:gap-6 py-10">
+            <div className="w-full h-auto flex flex-wrap justify-center items-center gap-4 md:gap-6 py-10">
               {products
                 .slice(0, productLimit)
                 .map((data: any, index: number) => {
@@ -354,7 +354,7 @@ const CarsCards: React.FC<Props> = ({
           {/* cards cards end here*/}
 
           <div className="w-full h-auto flex justify-center gap-1">
-            {productsLength > 10 && (
+            {productsLength > 12 && (
               <button
                 disabled={prev <= 1}
                 onClick={handleLoadPrev}
@@ -367,7 +367,7 @@ const CarsCards: React.FC<Props> = ({
                 Prev
               </button>
             )}
-            {productsLength > 10 && (
+            {productsLength > 12 && (
               <button
                 disabled={current >= productsLength}
                 onClick={handleLoadMore}
