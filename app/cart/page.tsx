@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Footer from "../components/Footer";
 
+import { checkout } from "../checkout";
+import Link from "next/link";
+
 type Props = {};
 
 const Page = (props: Props) => {
@@ -125,12 +128,14 @@ const Page = (props: Props) => {
 
         {cartData.length !== 0 && (
           <div className="w-full h-auto flex justify-center items-center my-10">
-            <button
-              className="bg-yellow-500 text-white lg:px-6 px-3 lg:py-3 py-2 rounded-lg hover:bg-yellow-600 hover:scale-110 hover:duration-300 "
-              // onClick={() => handleCheckOut()}
-            >
-              Checkout
-            </button>
+            <Link href={"https://buy.stripe.com/test_cN25kyg10f1G5aw6op"}>
+              <button
+                className="bg-yellow-500 text-white lg:px-6 px-3 lg:py-3 py-2 rounded-lg hover:bg-yellow-600 hover:scale-110 hover:duration-300 "
+                // onClick={()=> }
+              >
+                Checkout
+              </button>
+            </Link>
           </div>
         )}
       </div>
