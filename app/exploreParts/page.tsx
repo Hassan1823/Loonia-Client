@@ -5,15 +5,13 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import Loader from "../components/Loader";
 import { categoriesData } from "../data/data";
-import Heading from "../utils/Heading";
-import Header from "../components/Header";
 
 type Props = {};
 
 const Page: React.FC<Props> = (props) => {
-  const [open, setOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(0);
-  const [route, setRoute] = useState("Login");
+  // const [open, setOpen] = useState(false);
+  // const [activeItem, setActiveItem] = useState(0);
+  // const [route, setRoute] = useState("Login");
 
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
   // const [selectYear, setSelectYear] = useState("");
@@ -70,23 +68,11 @@ const Page: React.FC<Props> = (props) => {
     )
   );
 
-  //   console.log("Main Cat : ", categoriesByLetter);
+//   console.log("Main Cat : ", categoriesByLetter);
 
   return (
-    <div className="w-full h-auto">
-      <Heading
-        title={`${selectManufacture} parts`}
-        description={`This is the ${selectManufacture} parts place where you can find all parts`}
-        keywords={`car parts,${selectManufacture}, loonia traders, parts`}
-      />
-
-      <Header
-        open={open}
-        setOpen={setOpen}
-        activeItem={activeItem}
-        setRoute={setRoute}
-        route={route}
-      />
+    <div className="w-fullh-auto">
+     
 
       {/* --------------------------------------- */}
       {/* main layout */}

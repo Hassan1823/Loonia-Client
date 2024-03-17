@@ -5,24 +5,17 @@ const Footer = () => {
   return (
     <div>
       <footer className="footer footer-center p-10 bg-black border-t  text-base-content rounded">
-        <nav className="flex flex-wrap justify-center items-center gap-4">
-          <Link href="/exploreParts" passHref className="link link-hover">
-            Products
+        <nav className="grid grid-flow-col gap-4">
+          <Link href="/exploreParts" className="link link-hover">
+            Explore Parts
           </Link>
-          <Link href="/about" passHref className="link link-hover">
-            About
+          <Link href="/contactUs" className="link link-hover">
+            Contact
           </Link>
-          <Link href="/privacy" passHref className="link link-hover">
-            Privacy
-          </Link>
-          <Link href="/faq" passHref className="link link-hover">
-            FAQ
-          </Link>
-
-          <Link href="/cart" passHref className="link link-hover">
+          <Link href="/cart" className="link link-hover">
             Cart
           </Link>
-          <Link href="/calculator" passHref className="link link-hover">
+          <Link href="/calculator" className="link link-hover">
             Calculator
           </Link>
         </nav>
@@ -64,7 +57,7 @@ const Footer = () => {
           </div>
         </nav>
         <aside>
-          <p>Copyright © 2024 - All right reserved by Loonia Traders</p>
+          <p>Copyright © 2023 - All right reserved by Amayama Ltd</p>
         </aside>
       </footer>
     </div>

@@ -26,27 +26,6 @@ export const userApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
-    userInfo: builder.query({
-      query: () => ({
-        url: "me",
-        method: "GET",
-        credentials: "include" as const,
-      }),
-    }),
-    userCart: builder.query({
-      query: () => ({
-        url: `user-cart`,
-        method: "GET",
-        credentials: "include" as const,
-      }),
-    }),
-    deleteItemFromCart: builder.mutation({
-      query: (productId) => ({
-        url: `/delete-cart-item/${productId}`,
-        method: "DELETE",
-        credentials: "include" as const,
-      }),
-    }),
   }),
 });
 
@@ -54,7 +33,4 @@ export const {
   useUpdateAvatarMutation,
   useEditProfileMutation,
   useUpdatePasswordMutation,
-  useUserInfoQuery,
-  useUserCartQuery,
-  useDeleteItemFromCartMutation,
 } = userApi;

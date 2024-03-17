@@ -57,7 +57,7 @@ const SideBarProfile: FC<Props> = ({
         onClick={() => setActive(3)}
       >
         <MdOutlineProductionQuantityLimits size={22} fill="#fff" />
-        <h5 className="pl-2 800px:block hidden text-white">Orders</h5>
+        <h5 className="pl-2 800px:block hidden text-white">Cart Products</h5>
       </div>
       {user.role === "admin" && (
         <Link

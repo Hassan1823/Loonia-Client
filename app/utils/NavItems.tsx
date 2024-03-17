@@ -59,7 +59,7 @@ const NavItems: FC<Props> = ({ activeItem, isMobile }) => {
             {/* <div className="800px:hidden mt-5 gap-8"> */}
             {navItemsData &&
               navItemsData.map((i, index) => (
-                <Link href={i.url} key={index} passHref>
+                <Link href="/" key={index} passHref>
                   <span
                     className={`${
                       activeItem === index ? "text-yellow-500 " : "text-white "

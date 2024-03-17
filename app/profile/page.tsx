@@ -20,7 +20,7 @@ const Page: FC<Props> = (props) => {
     <div className="w-full min-h-screen h-auto">
       <Protected>
         <Heading
-          title={`${user?.name} Profile Loonia Traders`}
+          title={`${user?.name} Profile`}
           description="This is the car parts place where you can find all parts"
           keywords="car parts, loonia traders, parts"
         />

@@ -6,7 +6,7 @@ type Props = {};
 const DashboardHero = (props: Props) => {
   return (
     <div>
-      hello
+      <DashboardHeader />
     </div>
   );
 };

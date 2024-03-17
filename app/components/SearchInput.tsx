@@ -1,142 +1,199 @@
 "use client";
 
-import { useGetMainTypeProductsQuery } from "@/redux/features/products/productApi";
+import {
+  // useGetAllProductsQuery,
+  useGetMainTypeProductsQuery,
+  useGetProductsByChassisQuery,
+  useGetProductsByPartNumberQuery,
+} from "@/redux/features/products/productApi";
 import { useEffect, useState } from "react";
 import CarsCards from "./CarsCards";
+import toast from "react-hot-toast";
+
+type PartsType = {
+  partName: string;
+  partPrice: string;
+  partNumber: string;
+  image: string;
+  frames: string;
+  h1Tag: string;
+  subcategory: string;
+  title: string;
+};
+
+const partsInitialState: PartsType = {
+  partName: "",
+  partPrice: "",
+  partNumber: "",
+  image: "",
+  frames: "",
+  h1Tag: "",
+  subcategory: "",
+  title: "",
+};
 
 function SearchInput() {
   const [selectManufacture, setSelectManufacturer] = useState("Toyota");
   const [selectSearchType, setSelectSearchType] = useState("Categories");
+  const [searchValue, setSearchValue] = useState("");
   const [products, setProducts] = useState([]);
 
   const [framesProduct, setFramesProduct] = useState([]);
-
+  const [partsProduct, setPartsProduct] = useState([]);
+  const [partsIndex, setPartsIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [chassisValue, setChassisValue] = useState("");
+  const [chassisValue, setChassisValue] = useState(searchValue);
 
-  const [totalLength, setTotalLength] = useState<number>(0);
-
-  const [partsValue, setPartsValue] = useState("");
-
-  const [partsTest, setPartsTest] = useState([]);
-
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(12);
-
-  const [tablePage, setTablePage] = useState(1);
-  const [tableLimit, setTableLimit] = useState(10);
-  const [tableTotalPages, setTableTotalPages] = useState(0);
+  const [partState, setPartState] = useState<PartsType>(partsInitialState);
 
   // ! search by parts number starts here
 
-  const handlePartsSearch = async () => {
-    if (partsValue === "") {
-      return;
-    } else {
-      console.log("Parts Values is : ", partsValue);
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-      const apiUrl = `${baseUrl}/products-by-hrefNumber/${partsValue}/${tableLimit}/${tablePage}`;
-      try {
-        setIsLoading(true);
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        setPartsTest(data.product);
-        setTableTotalPages(data.totalPages);
-
-        setIsLoading(false);
-      } catch (error) {
-        return;
-      }
-    }
-  };
-
-  const handleTableNext = () => {
-    setIsLoading(true);
-
-    const page = tablePage + 1;
-    setTablePage(page);
-
-    const limit = tableLimit + 10;
-    setTableLimit(limit);
-  };
-  const handleTablePrev = () => {
-    setIsLoading(true);
-
-    const page = tablePage - 1;
-    setTablePage(page);
-
-    const limit = tableLimit - 10;
-    setTableLimit(limit);
-  };
+  const {
+    data: partsData,
+    isError: partsError,
+    refetch: partsRefetch,
+  } = useGetProductsByPartNumberQuery({ href_number: searchValue });
 
   useEffect(() => {
-    // Ensure we don't call handlePartsSearch() with invalid page or limit values
-    if (tablePage > 0 && tableLimit > 0) {
-      console.log("table page : ", tablePage);
-      console.log("table limit : ", tableLimit);
-      handlePartsSearch();
+    if (selectSearchType === "Parts Number" && searchValue !== "") {
+      if (partsData) {
+        setIsLoading(false);
+        // setPartsProduct(partsData.resultProducts);
+        console.log(`Parts Products are:`);
+
+        setPartState({
+          ...partState,
+          partName: partsData.resultProducts.partName,
+          frames: partsData.resultProducts.partName,
+          h1Tag: partsData.resultProducts.productName,
+          image: partsData.resultProducts.productImage,
+          partNumber: partsData.resultProducts.partNumber,
+          partPrice: partsData.resultProducts.partPrice,
+          subcategory: partsData.resultProducts.mainTitle,
+          title: partsData.resultProducts.mainCategory,
+        });
+        console.log(partState);
+      } else {
+        setIsLoading(true);
+      }
+      if (partsError) {
+        console.log(`Getting Error in Parts Search`);
+      }
     }
-  }, [tablePage, tableLimit]);
+  }, [
+    partsData,
+    partsError,
+    // selectSearchType,
+    // partState,
+  ]);
+
+  useEffect(() => {
+    const handlePartsRefetch = async () => {
+      setIsLoading(true);
+      console.log(`Refetching parts ...`);
+      await partsRefetch();
+      setIsLoading(false);
+      console.log(`Refetching parts Complete`);
+    };
+
+    if (partState.partName !== "" && selectSearchType === "Parts Number") {
+      setPartState({
+        ...partState,
+        partName: "",
+        frames: "",
+        h1Tag: "",
+        image: "",
+        partNumber: "",
+        partPrice: "",
+        subcategory: "",
+        title: "",
+      });
+
+      handlePartsRefetch();
+    }
+  }, [searchValue]);
+
   // ! search by parts number ends here
 
   // ~----------------------------------
 
   // ! search chassis starts here
 
-  const handleChassisSearch = async () => {
-    if (chassisValue === "") {
-      return;
-    } else {
-      console.log(chassisValue);
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-      const apiUrl = `${baseUrl}/products-by-frames/${chassisValue}/${10}/${1}`;
+  const chassisResult = useGetProductsByChassisQuery({
+    frames: chassisValue,
+  });
+  const {
+    data: chassisData,
+    isError: chassisError,
+    refetch: chassisRefetch,
+  } = chassisResult;
 
-      setFramesProduct([]);
-      try {
-        setIsLoading(true);
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        console.log(data.products);
-        setFramesProduct(data.products);
+  // console.log(`Search Input Value is :`);
+  // console.log(searchValue);
+
+  useEffect(() => {
+    setChassisValue(searchValue);
+
+    const inputArray = chassisValue.split("");
+    console.log(`input array is`);
+    console.log(inputArray);
+
+    setFramesProduct([]);
+    if (selectSearchType === "Chassis" && inputArray.length >= 3) {
+      if (inputArray.length === 0) {
+        toast.error("Please Enter Some Value ...");
+      }
+      console.log(`hitting chassis api`);
+      if (chassisData) {
+        setFramesProduct(chassisData.resultProduct);
+        console.log("Chassis data:");
+        console.log(chassisData);
         setIsLoading(false);
-      } catch (error) {
-        return;
+      } else {
+        setIsLoading(true);
+      }
+
+      if (chassisError) {
+        console.log(`Chassis Search Error`);
       }
     }
-  };
+  }, [chassisData, chassisError, selectSearchType, searchValue, chassisValue]);
+
+  useEffect(() => {
+    const refetchChassis = async () => {
+      setIsLoading(true);
+      console.log(`Refetching Chassis ...`);
+      await chassisRefetch();
+      setIsLoading(false);
+      console.log(`Refetching Chassis Complete`);
+    };
+
+    if (selectSearchType === "Chassis") {
+      if (framesProduct.length !== 0) {
+        // setChassisValue("");
+        refetchChassis();
+      }
+    }
+  }, [chassisValue]);
 
   // ! search chassis ends here
 
   // ~-------------------------------
   // ! search by main types starts here
-  const {
-    data,
-    isLoading: mainLoading,
-    isError,
-    refetch,
-  } = useGetMainTypeProductsQuery(
-    {
-      type: selectManufacture,
-      limit: limit,
-      page: page,
-    },
-    { refetchOnMountOrArgChange: true }
-  );
+  const { data, isError, refetch } = useGetMainTypeProductsQuery({
+    type: selectManufacture,
+  });
 
   useEffect(() => {
-    if (mainLoading) {
-      console.log(`Loading ...`);
-      setIsLoading(true);
-    } else {
-      console.log(`Loading Complete`);
-    }
     if (data) {
       setProducts(data.products);
-      setTotalLength(data.totalLength);
-      console.log("Length is ", data.totalLength);
 
       setIsLoading(false);
+      if (isLoading) {
+        console.log(`Loading ...`);
+      } else {
+        console.log(`Loading Complete`);
+      }
     }
 
     if (isError) {
@@ -144,52 +201,34 @@ function SearchInput() {
     }
   }, [data, isError]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      console.log(`Loading ...`);
+      await refetch();
+      setIsLoading(false);
+      console.log(`Loading Complete`);
+    };
+
+    fetchData();
+  }, [selectManufacture]);
+
   // ! search by main types ends here
 
   // handle manufacturer
   const handleManufacturerChange = (e: any) => {
-    setSelectManufacturer(e.target.value);
-    handleMainRefetch(); // Update the selectedManufacturer state with the selected option
-  };
-
-  const handleMainRefetch = () => {
-    setIsLoading(true);
-    setLimit(12);
-    setPage(1);
-    console.log(`handling refetch ${page} and ${limit}`);
-    // refetch();
+    setSelectManufacturer(e.target.value); // Update the selectedManufacturer state with the selected option
   };
 
   // handle search type
   const handleYearChange = (e: any) => {
     setSelectSearchType(e.target.value); // Update the selectedYears state with the selected option
   };
-
-  // ! handle load more function
-  const handleLoadMore = () => {
-    setIsLoading(true);
-    console.log(`Loading Prev `);
-    const pre = page + 1;
-    setPage(pre);
-    console.log(`prev :`, page);
-    const curr = limit + 12;
-    setLimit(curr);
-    console.log(`current :`, limit);
-
-    // refetch();
-  };
-  // ! handle load prev function
-  const handleLoadPrev = () => {
-    setIsLoading(true);
-    console.log(`Loading Prev `);
-    const pre = page - 1;
-    setPage(pre);
-    console.log(`prev :`, page);
-    const curr = limit - 12;
-    setLimit(curr);
-    console.log(`current :`, limit);
-
-    // refetch();
+  // handle input search Value
+  const handleSetSearchValue = (e: any) => {
+    let valueSearch = e.target.value;
+    let value = valueSearch;
+    setSearchValue(value); // Update the selectedYears state with the selected option
   };
 
   return (
@@ -207,11 +246,14 @@ function SearchInput() {
                   <input
                     type="text"
                     placeholder="S51"
-                    className="p-2 outline-none bg-transparent text-white placeholder:text-white w-full max-w-xs text-base"
-                    value={chassisValue}
-                    onChange={(e) => setChassisValue(e.target.value)}
+                    className="p-2 outline-none bg-transparent text-white placeholder:text-white w-[13vw] text-[15px]"
+                    value={searchValue}
+                    onChange={handleSetSearchValue}
                   />
-                  <button onClick={handleChassisSearch} className="pr-4">
+                  <button
+                    //  onClick={handleChassisSearch}
+                    className="pr-4"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -226,16 +268,19 @@ function SearchInput() {
                     </svg>
                   </button>
                 </>
-              ) : selectSearchType === "Parts" ? (
+              ) : selectSearchType === "Parts Number" ? (
                 <>
                   <input
                     type="text"
                     placeholder="08911-1062G"
-                    className="sm:p-0 p-2 outline-none bg-transparent text-white placeholder:text-white w-full max-w-xs text-[15px]"
-                    value={partsValue}
-                    onChange={(e) => setPartsValue(e.target.value)}
+                    className="p-2 outline-none bg-transparent text-white placeholder:text-white w-[13vw] text-[15px]"
+                    value={searchValue}
+                    onChange={handleSetSearchValue}
                   />
-                  <button onClick={handlePartsSearch} className="pr-4">
+                  <button
+                    // onClick={handlePartsSearch}
+                    className="pr-4"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -253,7 +298,7 @@ function SearchInput() {
               ) : (
                 <>
                   <select
-                    className="select w-full max-w-xs bg-yellow-500"
+                    className="select select-bordered w-full max-w-xs bg-yellow-500"
                     value={selectManufacture} // Set the selected value of the select element to the state variable
                     onChange={handleManufacturerChange} // Handle the change event
                   >
@@ -273,12 +318,12 @@ function SearchInput() {
             </div>
             <div className="flex items-center ">
               <select
-                className="select w-full max-w-xs bg-yellow-500"
+                className="select select-bordered w-full max-w-xs bg-yellow-500"
                 value={selectSearchType} // Set the selected value of the select element to the state variable
                 onChange={handleYearChange} // Handle the change event
               >
                 <option selected>Categories</option>
-                <option>Parts</option>
+                <option>Parts Number</option>
                 <option>Chassis</option>
               </select>
             </div>
@@ -288,20 +333,11 @@ function SearchInput() {
 
       <CarsCards
         selectSearchType={selectSearchType}
+        searchValue={searchValue}
         isLoading={isLoading}
         products={products}
         framesProduct={framesProduct}
-        productsLength={totalLength}
-        handleLoadMore={handleLoadMore}
-        handleLoadPrev={handleLoadPrev}
-        prev={page}
-        current={limit}
-        partsTest={partsTest}
-        handleTableNext={handleTableNext}
-        handleTablePrev={handleTablePrev}
-        totalTablePages={tableTotalPages}
-        tablePage={tablePage}
-        tableLimit={tableLimit}
+        partState={partState}
       />
     </div>
   );

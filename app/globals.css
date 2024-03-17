@@ -46,6 +46,8 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -113,8 +115,4 @@ body {
 
 .shake {
   animation: shake 0.5s ease-in-out;
-}
-
-select:focus {
-  border: none;
 }
