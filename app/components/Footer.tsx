@@ -57,7 +57,7 @@ const Footer = () => {
           </div>
         </nav>
         <aside>
-          <p>Copyright © 2023 - All right reserved by Amayama Ltd</p>
+          <p>Copyright © 2023 - All right reserved by Loonia Ltd</p>
         </aside>
       </footer>
     </div>

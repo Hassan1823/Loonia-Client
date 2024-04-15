@@ -14,7 +14,7 @@ const Page: FC<Props> = (props) => {
   const [activeItem, setActiveItem] = useState(5);
   const [route, setRoute] = useState("Login");
 
-  const {user} = useSelector((state:any)=> state.auth)
+  const { user } = useSelector((state: any) => state.auth);
 
   return (
     <div className="w-full min-h-screen h-auto">
@@ -32,7 +32,7 @@ const Page: FC<Props> = (props) => {
           setRoute={setRoute}
           route={route}
         />
-        <Profile user={user}/>
+        <Profile user={user} />
       </Protected>
     </div>
   );
