@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import SearchInput from "./components/SearchInput";
 import Heading from "./utils/Heading";
+import CheckPart from "./components/CheckPart";
 
 interface Props {}
 
@@ -36,24 +37,7 @@ const Page: FC<Props> = (props) => {
 
       <Hero />
       <SearchInput />
-
-      {/* {isLoading ? (
-        <>
-          <Loader />
-        </>
-      ) : !isLoading && data ? (
-        <>
-          {data.products.map((item: any, key: number) => (
-            <div key={key}>
-            <p>{item.BreadcrumbsH1}</p>
-            <p>{item.ParentTitle}</p>
-            </div>
-          ))}
-        </>
-      ) : (
-        // console.log(`${data.products}`)
-        <p>No Data</p>
-      )} */}
+      {/* <CheckPart /> */}
 
       <Footer />
     </div>
